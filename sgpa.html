@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SGPA Calculator</title>
+</head>
+
+<body style="text-align:center; font-family: Arial;">
+
+<h2>SGPA Calculator</h2>
+
+<input type="number" id="marks" placeholder="Enter total marks">
+<br><br>
+
+<button onclick="calculate()">Calculate SGPA</button>
+
+<h3 id="result"></h3>
+
+<script>
+function calculate() {
+    let marks = document.getElementById("marks").value;
+    let sgpa = (marks / 10).toFixed(2);
+
+    document.getElementById("result").innerText = "SGPA: " + sgpa;
+}
+</script>
+
+</body>
+</html>

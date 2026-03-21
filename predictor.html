@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CET College Predictor</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+        }
+        .result {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .safe { color: green; }
+        .medium { color: orange; }
+        .dream { color: red; }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>KCET College Predictor</h2>
+
+    <input type="number" id="rank" placeholder="Enter your rank">
+
+    <select id="category">
+        <option value="general">General</option>
+        <option value="obc">OBC</option>
+        <option value="sc">SC/ST</option>
+    </select>
+
+    <button onclick="predict()">Predict Colleges</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+const colleges = [
+    {name: "RV College - CSE", cutoff: 1200},
+    {name: "BMS College - CSE", cutoff: 2500},
+    {name: "MSRIT - CSE", cutoff: 3000},
+    {name: "DSCE - CSE", cutoff: 8000},
+    {name: "NMIT - CSE", cutoff: 15000},
+    {name: "BNMIT - CSE", cutoff: 20000}
+];
+
+function predict() {
+    let rank = document.getElementById("rank").value;
+    let resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";
+
+    if (!rank) {
+        resultDiv.innerHTML = "Enter valid rank!";
+        return;
+    }
+
+    let output = "";
+
+    colleges.forEach(college => {
+        if (rank <= college.cutoff) {
+            let diff = college.cutoff - rank;
+
+            let category = "";
+            let className = "";
+
+            if (diff > 5000) {
+                category = "SAFE";
+                className = "safe";
+            } else if (diff > 1000) {
+                category = "MEDIUM";
+                className = "medium";
+            } else {
+                category = "DREAM";
+                className = "dream";
+            }
+
+            output += `<p class="${className}">
+                ${college.name} → ${category}
+            </p>`;
+        }
+    });
+
+    if (output === "") {
+        output = "No colleges found. Try higher rank range.";
+    }
+
+    resultDiv.innerHTML = output;
+}
+</script>
+
+</body>
+</html>
