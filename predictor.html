@@ -17,7 +17,6 @@
         h1 { font-size: 1.5rem; margin-bottom: 5px; }
         p.subtitle { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; }
 
-        /* Modern Input Form */
         .form-card { background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
         .input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
         label { font-size: 0.8rem; font-weight: 700; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; }
@@ -25,21 +24,19 @@
         
         .btn-predict { display: block; width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
 
-        /* Results UI */
         #results-container { margin-top: 20px; }
         .result-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .college-info h3 { font-size: 1.05rem; margin-bottom: 4px; color: #0f172a; }
         .college-info p { font-size: 0.8rem; color: var(--text-light); }
+        .adjusted-tag { font-size: 0.7rem; color: #94a3b8; font-style: italic; }
         
-        /* Status Badges */
         .badge { padding: 6px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
         .safe { background: #dcfce7; color: #166534; }
-        .medium { background: #fef08a; color: #854d0e; }
+        .moderate { background: #fef08a; color: #854d0e; }
         .dream { background: #fee2e2; color: #991b1b; }
 
         .no-results { text-align: center; padding: 20px; color: var(--text-light); font-weight: 600; }
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; }
         .nav-item { text-decoration: none; color: var(--text-light); font-size: 0.75rem; text-align: center; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
@@ -53,122 +50,169 @@
 
 <div class="container">
     <h1>College Predictor</h1>
-    <p class="subtitle">Based on 2025 KCET Round 2 Cutoffs</p>
+    <p class="subtitle">Multi-Year Algorithm with +10% Safety Buffer (GM)</p>
 
     <div class="form-card">
         <div class="input-group">
-            <label>Your KCET Rank</label>
+            <label>Your Expected KCET Rank</label>
             <input type="number" id="rank" placeholder="e.g. 15000">
-        </div>
-
-        <div class="input-group">
-            <label>Category</label>
-            <select id="category">
-                <option value="GM">General Merit (GM)</option>
-                <option value="2AG">Category 2A (2AG)</option>
-                <option value="3BG">Category 3B (3BG)</option>
-                <option value="SCG">Schedule Caste (SCG)</option>
-            </select>
         </div>
 
         <div class="input-group">
             <label>Preferred Branch</label>
             <select id="branch">
-                <option value="ALL">All Branches</option>
+                <option value="ALL">All Tech Branches</option>
                 <option value="CSE">Computer Science (CSE)</option>
                 <option value="AIML">AI & Machine Learning (AIML)</option>
-                <option value="ECE">Electronics (ECE)</option>
+                <option value="ISE">Information Science (ISE)</option>
+                <option value="DS">Data Science (DS)</option>
             </select>
         </div>
 
-        <button class="btn-predict" onclick="predict()">View My Chances →</button>
+        <button class="btn-predict" onclick="runPrediction()">Analyze My Chances →</button>
     </div>
 
-    <div id="results-container">
-        </div>
+    <div id="results-container"></div>
 </div>
 
 <nav class="bottom-nav">
     <a href="index.html" class="nav-item">🏠<br>Home</a>
     <a href="predictor.html" class="nav-item active">📊<br>Predictor</a>
     <a href="cutoffs.html" class="nav-item">📋<br>Cutoffs</a>
-    <a href="about.html" class="nav-item">ℹ️<br>About</a>
 </nav>
 
 <script>
-// Mock Data: Structured properly for a real database
-const kcetData = [
-    { college: "RVCE", branch: "CSE", category: "GM", cutoff: 350 },
-    { college: "BMSCE", branch: "CSE", category: "GM", cutoff: 1200 },
-    { college: "BMSCE", branch: "CSE", category: "2AG", cutoff: 2100 },
-    { college: "MSRIT", branch: "ECE", category: "GM", cutoff: 4500 },
-    { college: "REVA University", branch: "AIML", category: "GM", cutoff: 18000 },
-    { college: "REVA University", branch: "AIML", category: "SCG", cutoff: 42000 },
-    { college: "DSCE", branch: "CSE", category: "3BG", cutoff: 9500 },
-    { college: "NMIT", branch: "CSE", category: "GM", cutoff: 15000 }
+// RAW DATA (Cleaned for naming consistency)
+const colleges2024 = [
+  { name: "RVCE", branch: "CSE", cutoff: 501 }, { name: "RVCE", branch: "DS", cutoff: 745 },
+  { name: "MSRIT", branch: "CSE", cutoff: 2012 }, { name: "BMSCE", branch: "CSE", cutoff: 2995 },
+  { name: "BMSCE", branch: "DS", cutoff: 3558 }, { name: "MSRIT", branch: "ISE", cutoff: 3712 },
+  { name: "SJCE", branch: "CSE", cutoff: 4026 }, { name: "UVCE", branch: "CSE", cutoff: 4914 },
+  { name: "JSS STU", branch: "CSE", cutoff: 5248 }, { name: "DSCE", branch: "CSE", cutoff: 5996 },
+  { name: "UVCE", branch: "ISE", cutoff: 6958 }, { name: "JSS STU", branch: "ISE", cutoff: 7249 },
+  { name: "DSCE", branch: "DS", cutoff: 8159 }, { name: "SIT", branch: "CSE", cutoff: 8266 },
+  { name: "BIT", branch: "CSE", cutoff: 8598 }, { name: "NIE", branch: "CSE", cutoff: 8726 },
+  { name: "SIT", branch: "ISE", cutoff: 10908 }, { name: "NIE", branch: "AIML", cutoff: 11312 },
+  { name: "KLS Gogte IT", branch: "CSE", cutoff: 12020 }, { name: "RVITM", branch: "CSE", cutoff: 12063 },
+  { name: "BIT", branch: "ISE", cutoff: 12233 }, { name: "BMSIT", branch: "CSE", cutoff: 12689 },
+  { name: "NMIT", branch: "CSE", cutoff: 13141 }, { name: "NMIT", branch: "AIML", cutoff: 13535 },
+  { name: "SDMCE", branch: "CSE", cutoff: 13737 }, { name: "BNMIT", branch: "CSE", cutoff: 14957 },
+  { name: "RNSIT", branch: "CSE", cutoff: 15492 }, { name: "NHCE", branch: "CSE", cutoff: 15962 },
+  { name: "BNMIT", branch: "ISE", cutoff: 15977 }, { name: "BMSIT", branch: "AIML", cutoff: 16017 },
+  { name: "CMRIT", branch: "CSE", cutoff: 17905 }, { name: "RNSIT", branch: "AIML", cutoff: 18002 },
+  { name: "VVCE", branch: "CSE", cutoff: 18044 }, { name: "St. Joseph EC", branch: "CSE", cutoff: 18245 },
+  { name: "KLS Gogte IT", branch: "AIML", cutoff: 18858 }, { name: "SDMCE", branch: "ISE", cutoff: 18913 },
+  { name: "Dr. AIT", branch: "CSE", cutoff: 19645 }, { name: "NHCE", branch: "AIML", cutoff: 20238 },
+  { name: "MSRUAS", branch: "AIML", cutoff: 21552 }, { name: "DSATM", branch: "CSE", cutoff: 22062 }
 ];
 
-function predict() {
-    const userRank = parseInt(document.getElementById("rank").value);
-    const userCategory = document.getElementById("category").value;
-    const userBranch = document.getElementById("branch").value;
-    const resultsContainer = document.getElementById("results-container");
-    
-    resultsContainer.innerHTML = ""; // Clear old results
+const colleges2025 = [
+  { name: "RVCE", branch: "AIML", cutoff: 742 }, { name: "RVCE", branch: "CSE", cutoff: 2783 },
+  { name: "MSRIT", branch: "ISE", cutoff: 3196 }, { name: "MSRIT", branch: "AIML", cutoff: 3429 },
+  { name: "BMSCE", branch: "DS", cutoff: 4646 }, { name: "BMSCE", branch: "AIML", cutoff: 5087 },
+  { name: "UVCE", branch: "DS", cutoff: 7213 }, { name: "PESU", branch: "AIML", cutoff: 7283 },
+  { name: "JSS STU", branch: "AIML", cutoff: 7311 }, { name: "UVCE", branch: "ISE", cutoff: 7713 },
+  { name: "PESU", branch: "CSE", cutoff: 8400 }, { name: "DSCE", branch: "ISE", cutoff: 9151 },
+  { name: "JSS STU", branch: "ISE", cutoff: 9217 }, { name: "SIT", branch: "AIML", cutoff: 9562 },
+  { name: "RV University", branch: "CSE", cutoff: 9773 }, { name: "NIE", branch: "AIML", cutoff: 10634 },
+  { name: "DSCE", branch: "AIML", cutoff: 11734 }, { name: "BIT", branch: "ISE", cutoff: 12266 },
+  { name: "SIT", branch: "ISE", cutoff: 12432 }, { name: "BMSIT", branch: "AIML", cutoff: 13485 },
+  { name: "RVITM", branch: "AIML", cutoff: 14002 }, { name: "RVITM", branch: "CSE", cutoff: 14565 },
+  { name: "BIT", branch: "AIML", cutoff: 15039 }, { name: "KLS Gogte IT", branch: "AIML", cutoff: 15720 },
+  { name: "RNSIT", branch: "AIML", cutoff: 16199 }, { name: "BNMIT", branch: "AIML", cutoff: 16543 },
+  { name: "BNMIT", branch: "ISE", cutoff: 17720 }, { name: "SDMCE", branch: "AIML", cutoff: 17862 },
+  { name: "MSRUAS", branch: "AIML", cutoff: 18244 }, { name: "NHCE", branch: "AIML", cutoff: 18381 },
+  { name: "CMRIT", branch: "AIML", cutoff: 19559 }, { name: "CMRIT", branch: "DS", cutoff: 20870 },
+  { name: "SDMCE", branch: "ISE", cutoff: 20914 }, { name: "JSSATE", branch: "AIML", cutoff: 21636 },
+  { name: "Dr. AIT", branch: "AIML", cutoff: 22487 }, { name: "VVCE", branch: "AIML", cutoff: 22601 },
+  { name: "REVA", branch: "DS", cutoff: 22888 }, { name: "GSSSIT", branch: "AIML", cutoff: 23245 },
+  { name: "MSRUAS", branch: "ISE", cutoff: 23567 }, { name: "St. Joseph EC", branch: "AIML", cutoff: 23830 }
+];
 
-    if (!userRank || userRank <= 0) {
-        resultsContainer.innerHTML = "<div class='no-results'>⚠️ Please enter a valid rank.</div>";
+// STEP 1: Smart Merge
+const combinedMap = {};
+
+colleges2024.forEach(c => {
+  const key = c.name + "_" + c.branch;
+  combinedMap[key] = { ...c };
+});
+
+colleges2025.forEach(c => {
+  const key = c.name + "_" + c.branch;
+  combinedMap[key] = { ...c };
+});
+
+let masterColleges = Object.values(combinedMap);
+
+// STEP 2: Realistic Buffer
+masterColleges.forEach(c => {
+  c.adjustedCutoff = Math.floor(c.cutoff * 1.1); // +10% safety margin
+});
+
+function runPrediction() {
+    const rank = parseInt(document.getElementById("rank").value);
+    const branchChoice = document.getElementById("branch").value;
+    const container = document.getElementById("results-container");
+    container.innerHTML = "";
+
+    if (!rank || rank <= 0) {
+        container.innerHTML = "<div class='no-results'>⚠️ Enter a valid rank.</div>";
         return;
     }
 
-    // 1. Filter the database based on Category and Branch
-    let filteredColleges = kcetData.filter(item => {
-        let categoryMatch = (item.category === userCategory);
-        let branchMatch = (userBranch === "ALL" || item.branch === userBranch);
-        return categoryMatch && branchMatch;
-    });
+    let possibleColleges = [];
 
-    let outputHTML = "";
+    masterColleges.forEach(college => {
+        // Filter by branch
+        if (branchChoice !== "ALL" && college.branch !== branchChoice) return;
 
-    // 2. Determine Safe/Medium/Dream logic
-    filteredColleges.forEach(item => {
-        // We only show colleges if the user rank is somewhat close to the cutoff
-        // (Don't show a 100,000 rank student a college with a 1,000 cutoff)
-        if (userRank <= item.cutoff + 5000) { 
+        // STEP 3: Adjusted Predict Logic
+        // We allow up to +2000 rank difference for "Dream" chances
+        if (rank <= college.adjustedCutoff + 2000) {
             
-            let diff = item.cutoff - userRank;
-            let status = "";
-            let badgeClass = "";
+            // STEP 4: Smart Classification
+            let diff = college.adjustedCutoff - rank;
+            let category = "";
+            let cssClass = "";
 
-            if (diff >= 2000) {
-                status = "Safe";
-                badgeClass = "safe";
-            } else if (diff >= -1500 && diff < 2000) {
-                // Medium if rank is slightly above the cutoff
-                status = "Medium";
-                badgeClass = "medium";
+            if (diff > 5000) {
+                category = "SAFE";
+                cssClass = "safe";
+            } else if (diff > 1500) {
+                category = "MODERATE";
+                cssClass = "moderate";
             } else {
-                status = "Dream";
-                badgeClass = "dream";
+                category = "DREAM";
+                cssClass = "dream";
             }
 
-            outputHTML += `
-                <div class="result-card">
-                    <div class="college-info">
-                        <h3>${item.college}</h3>
-                        <p>${item.branch} | Cutoff: ${item.cutoff}</p>
-                    </div>
-                    <div class="badge ${badgeClass}">${status}</div>
-                </div>
-            `;
+            possibleColleges.push({ ...college, category, cssClass, diff });
         }
     });
 
+    // STEP 5: Sort and Limit to Top 10
+    possibleColleges.sort((a, b) => a.adjustedCutoff - b.adjustedCutoff);
+    let topResults = possibleColleges.slice(0, 10);
+
+    let outputHTML = "";
+    topResults.forEach(item => {
+        outputHTML += `
+            <div class="result-card">
+                <div class="college-info">
+                    <h3>${item.name}</h3>
+                    <p>${item.branch} | Cutoff: ${item.cutoff} <br>
+                    <span class="adjusted-tag">(Buffer: ${item.adjustedCutoff})</span></p>
+                </div>
+                <div class="badge ${item.cssClass}">${item.category}</div>
+            </div>
+        `;
+    });
+
     if (outputHTML === "") {
-        outputHTML = "<div class='no-results'>No colleges found in this range. Try adjusting your branch.</div>";
+        outputHTML = "<div class='no-results'>No matches found. Try expanding your branch selection.</div>";
     }
 
-    resultsContainer.innerHTML = outputHTML;
+    container.innerHTML = outputHTML;
 }
 </script>
 
