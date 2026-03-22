@@ -1,39 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Toolkit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KCET Predictor 2026 | Engineering College Cutoffs</title>
+    <meta name="description" content="Predict your engineering college based on official KCET 2024 and 2025 Round 2 cutoffs. Accurate results for GM, 2A, 3B, and SC/ST categories across Karnataka.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #f4f4f4;
+        :root { 
+            --primary: #2563eb; 
+            --bg: #ffffff; 
+            --surface: #f8fafc; 
+            --text: #0f172a; 
+            --text-light: #64748b; 
         }
-        .box {
-            margin-top: 100px;
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: var(--text); padding-bottom: 80px; background: var(--bg); }
+        
+        /* Sticky Header */
+        header { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 100; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.25rem; text-decoration: none; letter-spacing: -0.5px; }
+
+        /* Hero Section */
+        .hero { padding: 30px 20px; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); text-align: left; }
+        .hero h1 { font-size: 1.8rem; margin-bottom: 12px; color: #0f172a; line-height: 1.2; letter-spacing: -0.5px; }
+        .hero p { font-size: 0.95rem; color: var(--text-light); margin-bottom: 20px; }
+        
+        /* CTA Button */
+        .cta-btn { 
+            display: block; width: 100%; text-align: center; background: var(--primary); color: white; 
+            padding: 14px 24px; border-radius: 8px; text-decoration: none; 
+            font-weight: 700; font-size: 1.05rem; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            transition: transform 0.1s;
         }
-        a {
-            display: block;
-            margin: 15px;
-            padding: 10px;
-            background: blue;
-            color: white;
-            text-decoration: none;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 5px;
+        .cta-btn:active { transform: scale(0.98); }
+
+        /* Preview Block (Trust Builder) */
+        .preview-block {
+            padding: 15px; background: #ffffff; margin: 20px 0; 
+            border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
+        .preview-title { color: var(--text); font-weight: 700; margin-bottom: 10px; display: block; }
+        .preview-item { font-weight: 600; margin-bottom: 5px; display: block; }
+
+        /* Dynamic Hook Section */
+        .hook-container { margin: 0 20px 20px; padding: 15px; background: #eff6ff; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .hook-label { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        #dynamic-rank { font-weight: 600; font-size: 0.95rem; margin-top: 5px; color: #1e40af; }
+
+        /* Top Searches (SEO Booster) */
+        .top-searches { padding: 20px; }
+        .top-searches h3 { font-size: 1.1rem; margin-bottom: 12px; }
+        .search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 8px 14px; background: #f1f5f9; border-radius: 20px; font-size: 0.85rem; text-decoration: none; color: var(--text); border: 1px solid #e2e8f0; font-weight: 600; }
+
+        /* Content Sections */
+        .content-section { padding: 25px 20px; border-top: 1px solid #f1f5f9; }
+        .content-section h3 { font-size: 1.2rem; margin-bottom: 10px; color: #0f172a; }
+        .content-section p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+        
+        .trust-list { list-style-type: none; margin-top: 12px; color: var(--text-light); font-size: 0.9rem; }
+        .trust-list li { margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; z-index: 1001; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-light); font-size: 0.7rem; font-weight: 600; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 1.3rem; margin-bottom: 2px; }
     </style>
 </head>
-
 <body>
 
-<div class="box">
-    <h1>🎓 Student Toolkit</h1>
+<header>
+    <a href="index.html" class="logo">StudentHub</a>
+</header>
 
-    <a href="predictor.html">KCET Predictor</a>
-    <a href="sgpa.html">SGPA Calculator</a>
+<section class="hero">
+    <h1>KCET College Predictor 2026</h1>
+    <p>Wondering which engineering college you'll get? Our predictor uses <b>official 2024 & 2025 KEA Round 2 cutoffs</b> to give you realistic chances for CSE, ECE, and AI/ML across Karnataka.</p>
+    
+    <div class="preview-block">
+        <span class="preview-title">Example Result (Rank: 12,500 GM):</span>
+        <span class="preview-item" style="color: #991b1b;">🔴 RVCE (CSE) → Dream</span>
+        <span class="preview-item" style="color: #854d0e;">🟡 BMSCE (ECE) → Medium</span>
+        <span class="preview-item" style="color: #166534;">🟢 DSCE (CSE) → Safe</span>
+    </div>
+
+    <a href="predictor.html" class="cta-btn">Predict My College →</a>
+</section>
+
+<div class="hook-container">
+    <div class="hook-label">🔥 Live Trend Example</div>
+    <div id="dynamic-rank">Loading example...</div>
 </div>
+
+<div class="top-searches">
+    <h3>Top Student Searches</h3>
+    <div class="search-chips">
+        <a href="cutoffs.html" class="chip">Top 10 CSE Colleges</a>
+        <a href="cutoffs.html" class="chip">RVCE Cutoff 2025</a>
+        <a href="cutoffs.html" class="chip">Colleges under 20k Rank</a>
+        <a href="cutoffs.html" class="chip">REVA University AI/ML</a>
+    </div>
+</div>
+
+<section class="content-section" style="background: var(--surface);">
+    <h3>Why use our predictor?</h3>
+    <ul class="trust-list">
+        <li>✅ <div><b>100% Official Data:</b> Based purely on the authentic KEA Seat Matrix.</div></li>
+        <li>✅ <div><b>Category-Specific:</b> Real cutoffs for 2A, 3B, SC/ST, and Rural categories.</div></li>
+        <li>✅ <div><b>No Fake Promises:</b> We show you the brutal truth about your admission chances.</div></li>
+    </ul>
+</section>
+
+<article class="content-section">
+    <h3>How our KCET Predictor works?</h3>
+    <p>
+        Our algorithm analyzes the official Seat Matrix and Categorical Cutoffs (GM, 2A, 3B, SC/ST, Rural, and Kannada Medium). By comparing your rank against the Second Extended Round trends from recent years, we provide a structured probability for each college. This helps you build a smarter, safer option entry list for KEA counseling.
+    </p>
+</article>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+    </a>
+    <a href="predictor.html" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span>Predictor</span>
+    </a>
+    <a href="cutoffs.html" class="nav-item">
+        <span class="nav-icon">📋</span>
+        <span>Cutoffs</span>
+    </a>
+    <a href="about.html" class="nav-item">
+        <span class="nav-icon">ℹ️</span>
+        <span>About</span>
+    </a>
+</nav>
+
+<script>
+    // Logic for the Dynamic Hook
+    const examples = [
+        "Rank 5,400 (3BR) → Likely: MSRIT (ISE)",
+        "Rank 12,000 (GM) → Likely: BIT (CSE) or NIE (ECE)",
+        "Rank 45,000 (2AG) → Likely: REVA (AI/ML) or DSCE (Civil)",
+        "Rank 2,100 (GM) → Likely: RVCE (Electronics) or PESU (CSE)"
+    ];
+    
+    // Pick a random example on page load
+    document.getElementById('dynamic-rank').innerText = examples[Math.floor(Math.random() * examples.length)];
+</script>
 
 </body>
 </html>

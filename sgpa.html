@@ -1,27 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SGPA Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SGPA Calculator | StudentHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #ffffff; --surface: #f8fafc; --text: #0f172a; --text-light: #64748b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
+        header { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; background: white; z-index: 100; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+
+        .calculator-container { padding: 20px; }
+        h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        p.subtitle { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; }
+
+        /* The Input Rows */
+        .subject-row { 
+            display: flex; gap: 10px; margin-bottom: 12px; 
+            background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;
+        }
+        .input-group { display: flex; flex-direction: column; flex: 1; }
+        label { font-size: 0.75rem; font-weight: 600; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; }
+        
+        input, select { 
+            padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; 
+            font-size: 1rem; font-family: 'Inter', sans-serif; background: white;
+        }
+
+        /* Buttons */
+        .btn { display: block; width: 100%; text-align: center; padding: 14px; border-radius: 8px; font-weight: 700; border: none; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        .btn-add { background: #e0e7ff; color: var(--primary); border: 1px dashed var(--primary); }
+        .btn-calc { background: var(--primary); color: white; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+
+        /* Result Box */
+        .result-box {
+            margin-top: 25px; padding: 20px; background: #eff6ff; border-radius: 12px;
+            text-align: center; border: 2px solid var(--primary); display: none;
+        }
+        .result-box h2 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; }
+        .result-box p { font-size: 0.9rem; color: #1e40af; font-weight: 600; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; }
+        .nav-item { text-decoration: none; color: var(--text-light); font-size: 0.75rem; text-align: center; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+    </style>
 </head>
+<body>
 
-<body style="text-align:center; font-family: Arial;">
+<header>
+    <a href="index.html" class="logo">StudentHub</a>
+</header>
 
-<h2>SGPA Calculator</h2>
+<div class="calculator-container">
+    <h1>SGPA Calculator</h1>
+    <p class="subtitle">Standard 10-Point Scale (VTU / REVA / Autonomous)</p>
 
-<input type="number" id="marks" placeholder="Enter total marks">
-<br><br>
+    <div id="subjects-container">
+        <div class="subject-row">
+            <div class="input-group">
+                <label>Credits</label>
+                <input type="number" class="credit-input" placeholder="e.g. 4" min="1" max="5">
+            </div>
+            <div class="input-group">
+                <label>Grade</label>
+                <select class="grade-input">
+                    <option value="10">O (90-100)</option>
+                    <option value="9">A+ (80-89)</option>
+                    <option value="8">A (70-79)</option>
+                    <option value="7">B+ (60-69)</option>
+                    <option value="6">B (55-59)</option>
+                    <option value="5">C (50-54)</option>
+                    <option value="0">F (Fail)</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-<button onclick="calculate()">Calculate SGPA</button>
+    <button class="btn btn-add" onclick="addSubject()">+ Add Another Subject</button>
+    <button class="btn btn-calc" onclick="calculateSGPA()">Calculate SGPA →</button>
 
-<h3 id="result"></h3>
+    <div class="result-box" id="resultBox">
+        <h2><span id="finalSGPA">0.00</span></h2>
+        <p>Total Credits: <span id="totalCredits">0</span></p>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item">🏠<br>Home</a>
+    <a href="sgpa.html" class="nav-item active">📊<br>Predictor</a>
+    <a href="cutoffs.html" class="nav-item">📋<br>Cutoffs</a>
+    <a href="about.html" class="nav-item">ℹ️<br>About</a>
+</nav>
 
 <script>
-function calculate() {
-    let marks = document.getElementById("marks").value;
-    let sgpa = (marks / 10).toFixed(2);
+    function addSubject() {
+        const container = document.getElementById("subjects-container");
+        const newRow = document.createElement("div");
+        newRow.className = "subject-row";
+        newRow.innerHTML = `
+            <div class="input-group">
+                <label>Credits</label>
+                <input type="number" class="credit-input" placeholder="e.g. 4" min="1" max="5">
+            </div>
+            <div class="input-group">
+                <label>Grade</label>
+                <select class="grade-input">
+                    <option value="10">O (90-100)</option>
+                    <option value="9">A+ (80-89)</option>
+                    <option value="8">A (70-79)</option>
+                    <option value="7">B+ (60-69)</option>
+                    <option value="6">B (55-59)</option>
+                    <option value="5">C (50-54)</option>
+                    <option value="0">F (Fail)</option>
+                </select>
+            </div>
+        `;
+        container.appendChild(newRow);
+    }
 
-    document.getElementById("result").innerText = "SGPA: " + sgpa;
-}
+    function calculateSGPA() {
+        const credits = document.querySelectorAll(".credit-input");
+        const grades = document.querySelectorAll(".grade-input");
+        
+        let totalCredits = 0;
+        let totalPoints = 0;
+
+        for (let i = 0; i < credits.length; i++) {
+            let creditValue = parseFloat(credits[i].value);
+            let gradeValue = parseFloat(grades[i].value);
+
+            if (!isNaN(creditValue)) {
+                totalCredits += creditValue;
+                totalPoints += (creditValue * gradeValue);
+            }
+        }
+
+        if (totalCredits === 0) {
+            alert("Please enter at least one subject with credits!");
+            return;
+        }
+
+        let sgpa = (totalPoints / totalCredits).toFixed(2);
+        
+        document.getElementById("finalSGPA").innerText = sgpa;
+        document.getElementById("totalCredits").innerText = totalCredits;
+        document.getElementById("resultBox").style.display = "block";
+    }
 </script>
 
 </body>

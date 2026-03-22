@@ -1,105 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CET College Predictor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KCET Predictor | StudentHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial;
-            background: #f4f4f4;
-            text-align: center;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            margin: 50px auto;
-            width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px gray;
-        }
-        input, select, button {
-            padding: 10px;
-            margin: 10px;
-            width: 80%;
-        }
-        .result {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .safe { color: green; }
-        .medium { color: orange; }
-        .dream { color: red; }
+        :root { --primary: #2563eb; --bg: #ffffff; --surface: #f8fafc; --text: #0f172a; --text-light: #64748b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
+        header { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; background: white; z-index: 100; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+
+        .container { padding: 20px; }
+        h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        p.subtitle { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; }
+
+        /* Modern Input Form */
+        .form-card { background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-size: 0.8rem; font-weight: 700; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; }
+        input, select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; width: 100%; background: white; }
+        
+        .btn-predict { display: block; width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+
+        /* Results UI */
+        #results-container { margin-top: 20px; }
+        .result-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .college-info h3 { font-size: 1.05rem; margin-bottom: 4px; color: #0f172a; }
+        .college-info p { font-size: 0.8rem; color: var(--text-light); }
+        
+        /* Status Badges */
+        .badge { padding: 6px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .safe { background: #dcfce7; color: #166534; }
+        .medium { background: #fef08a; color: #854d0e; }
+        .dream { background: #fee2e2; color: #991b1b; }
+
+        .no-results { text-align: center; padding: 20px; color: var(--text-light); font-weight: 600; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; }
+        .nav-item { text-decoration: none; color: var(--text-light); font-size: 0.75rem; text-align: center; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
     </style>
 </head>
-
 <body>
 
+<header>
+    <a href="index.html" class="logo">StudentHub</a>
+</header>
+
 <div class="container">
-    <h2>KCET College Predictor</h2>
+    <h1>College Predictor</h1>
+    <p class="subtitle">Based on 2025 KCET Round 2 Cutoffs</p>
 
-    <input type="number" id="rank" placeholder="Enter your rank">
+    <div class="form-card">
+        <div class="input-group">
+            <label>Your KCET Rank</label>
+            <input type="number" id="rank" placeholder="e.g. 15000">
+        </div>
 
-    <select id="category">
-        <option value="general">General</option>
-        <option value="obc">OBC</option>
-        <option value="sc">SC/ST</option>
-    </select>
+        <div class="input-group">
+            <label>Category</label>
+            <select id="category">
+                <option value="GM">General Merit (GM)</option>
+                <option value="2AG">Category 2A (2AG)</option>
+                <option value="3BG">Category 3B (3BG)</option>
+                <option value="SCG">Schedule Caste (SCG)</option>
+            </select>
+        </div>
 
-    <button onclick="predict()">Predict Colleges</button>
+        <div class="input-group">
+            <label>Preferred Branch</label>
+            <select id="branch">
+                <option value="ALL">All Branches</option>
+                <option value="CSE">Computer Science (CSE)</option>
+                <option value="AIML">AI & Machine Learning (AIML)</option>
+                <option value="ECE">Electronics (ECE)</option>
+            </select>
+        </div>
 
-    <div class="result" id="result"></div>
+        <button class="btn-predict" onclick="predict()">View My Chances →</button>
+    </div>
+
+    <div id="results-container">
+        </div>
 </div>
 
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item">🏠<br>Home</a>
+    <a href="predictor.html" class="nav-item active">📊<br>Predictor</a>
+    <a href="cutoffs.html" class="nav-item">📋<br>Cutoffs</a>
+    <a href="about.html" class="nav-item">ℹ️<br>About</a>
+</nav>
+
 <script>
-const colleges = [
-    {name: "RV College - CSE", cutoff: 1200},
-    {name: "BMS College - CSE", cutoff: 2500},
-    {name: "MSRIT - CSE", cutoff: 3000},
-    {name: "DSCE - CSE", cutoff: 8000},
-    {name: "NMIT - CSE", cutoff: 15000},
-    {name: "BNMIT - CSE", cutoff: 20000}
+// Mock Data: Structured properly for a real database
+const kcetData = [
+    { college: "RVCE", branch: "CSE", category: "GM", cutoff: 350 },
+    { college: "BMSCE", branch: "CSE", category: "GM", cutoff: 1200 },
+    { college: "BMSCE", branch: "CSE", category: "2AG", cutoff: 2100 },
+    { college: "MSRIT", branch: "ECE", category: "GM", cutoff: 4500 },
+    { college: "REVA University", branch: "AIML", category: "GM", cutoff: 18000 },
+    { college: "REVA University", branch: "AIML", category: "SCG", cutoff: 42000 },
+    { college: "DSCE", branch: "CSE", category: "3BG", cutoff: 9500 },
+    { college: "NMIT", branch: "CSE", category: "GM", cutoff: 15000 }
 ];
 
 function predict() {
-    let rank = document.getElementById("rank").value;
-    let resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "";
+    const userRank = parseInt(document.getElementById("rank").value);
+    const userCategory = document.getElementById("category").value;
+    const userBranch = document.getElementById("branch").value;
+    const resultsContainer = document.getElementById("results-container");
+    
+    resultsContainer.innerHTML = ""; // Clear old results
 
-    if (!rank) {
-        resultDiv.innerHTML = "Enter valid rank!";
+    if (!userRank || userRank <= 0) {
+        resultsContainer.innerHTML = "<div class='no-results'>⚠️ Please enter a valid rank.</div>";
         return;
     }
 
-    let output = "";
+    // 1. Filter the database based on Category and Branch
+    let filteredColleges = kcetData.filter(item => {
+        let categoryMatch = (item.category === userCategory);
+        let branchMatch = (userBranch === "ALL" || item.branch === userBranch);
+        return categoryMatch && branchMatch;
+    });
 
-    colleges.forEach(college => {
-        if (rank <= college.cutoff) {
-            let diff = college.cutoff - rank;
+    let outputHTML = "";
 
-            let category = "";
-            let className = "";
+    // 2. Determine Safe/Medium/Dream logic
+    filteredColleges.forEach(item => {
+        // We only show colleges if the user rank is somewhat close to the cutoff
+        // (Don't show a 100,000 rank student a college with a 1,000 cutoff)
+        if (userRank <= item.cutoff + 5000) { 
+            
+            let diff = item.cutoff - userRank;
+            let status = "";
+            let badgeClass = "";
 
-            if (diff > 5000) {
-                category = "SAFE";
-                className = "safe";
-            } else if (diff > 1000) {
-                category = "MEDIUM";
-                className = "medium";
+            if (diff >= 2000) {
+                status = "Safe";
+                badgeClass = "safe";
+            } else if (diff >= -1500 && diff < 2000) {
+                // Medium if rank is slightly above the cutoff
+                status = "Medium";
+                badgeClass = "medium";
             } else {
-                category = "DREAM";
-                className = "dream";
+                status = "Dream";
+                badgeClass = "dream";
             }
 
-            output += `<p class="${className}">
-                ${college.name} → ${category}
-            </p>`;
+            outputHTML += `
+                <div class="result-card">
+                    <div class="college-info">
+                        <h3>${item.college}</h3>
+                        <p>${item.branch} | Cutoff: ${item.cutoff}</p>
+                    </div>
+                    <div class="badge ${badgeClass}">${status}</div>
+                </div>
+            `;
         }
     });
 
-    if (output === "") {
-        output = "No colleges found. Try higher rank range.";
+    if (outputHTML === "") {
+        outputHTML = "<div class='no-results'>No colleges found in this range. Try adjusting your branch.</div>";
     }
 
-    resultDiv.innerHTML = output;
+    resultsContainer.innerHTML = outputHTML;
 }
 </script>
 

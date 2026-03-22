@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KCET 2025 Cutoffs | Search Engineering Colleges</title>
+    <meta name="description" content="Search official KCET 2025 cutoffs for all Karnataka engineering colleges. Filter by branch, category, and rank.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-light: #64748b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
+        header { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; background: white; z-index: 100; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+
+        .page-header { padding: 20px; background: white; border-bottom: 1px solid #e2e8f0; }
+        .page-header h1 { font-size: 1.4rem; margin-bottom: 8px; }
+        .page-header p { font-size: 0.9rem; color: var(--text-light); }
+
+        /* Search & Filter Sticky Bar */
+        .search-bar { padding: 15px 20px; position: sticky; top: 58px; background: #f8fafc; z-index: 90; border-bottom: 1px solid #e2e8f0; }
+        .search-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
+        .filter-row { display: flex; gap: 10px; }
+        .filter-select { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; font-size: 0.9rem; }
+
+        /* Data Cards (Mobile Replacement for Tables) */
+        .data-list { padding: 15px; }
+        .data-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .college-name { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+        .branch-tag { background: #eff6ff; color: #1e40af; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        
+        .cutoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
+        .cutoff-stat { display: flex; flex-direction: column; }
+        .stat-label { font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
+        .stat-value { font-size: 1.1rem; font-weight: 800; color: #0f172a; }
+
+        /* SEO Footer Text */
+        .seo-footer { padding: 20px; font-size: 0.85rem; color: var(--text-light); }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; z-index: 100; }
+        .nav-item { text-decoration: none; color: var(--text-light); font-size: 0.75rem; text-align: center; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">StudentHub</a>
+</header>
+
+<div class="page-header">
+    <h1>KCET Cutoffs 2025</h1>
+    <p>Browse official Round 2 closing ranks.</p>
+</div>
+
+<div class="search-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search college (e.g., REVA, BMSCE)..." onkeyup="filterData()">
+    <div class="filter-row">
+        <select id="branchFilter" class="filter-select" onchange="filterData()">
+            <option value="ALL">All Branches</option>
+            <option value="CSE">CSE</option>
+            <option value="AIML">AI/ML</option>
+            <option value="ECE">ECE</option>
+        </select>
+        <select id="categoryFilter" class="filter-select" onchange="filterData()">
+            <option value="GM">General (GM)</option>
+            <option value="2AG">2A (GM)</option>
+            <option value="SCG">SC (GM)</option>
+        </select>
+    </div>
+</div>
+
+<div class="data-list" id="dataList">
+    </div>
+
+<div class="seo-footer">
+    <h3>About KCET Cutoffs</h3>
+    <p>The closing ranks listed above represent the final admitted student for the 2025 KEA Second Extended Round. Variations may occur in 2026 based on paper difficulty and seat matrix adjustments.</p>
+</div>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item">🏠<br>Home</a>
+    <a href="predictor.html" class="nav-item">📊<br>Predictor</a>
+    <a href="cutoffs.html" class="nav-item active">📋<br>Cutoffs</a>
+    <a href="about.html" class="nav-item">ℹ️<br>About</a>
+</nav>
+
+<script>
+// Your Core Database (Expand this with real CSV data later)
+const cutoffDatabase = [
+    { college: "RV College of Engineering", code: "E075", branch: "CSE", gm: 310, cat2a: 850, scg: 4200 },
+    { college: "BMS College of Engineering", code: "E033", branch: "CSE", gm: 1250, cat2a: 2400, scg: 9500 },
+    { college: "REVA University", code: "E232", branch: "AIML", gm: 18500, cat2a: 25000, scg: 48000 },
+    { college: "REVA University", code: "E232", branch: "CSE", gm: 14000, cat2a: 19500, scg: 39000 },
+    { college: "Dayananda Sagar", code: "E040", branch: "ECE", gm: 6500, cat2a: 11000, scg: 22000 }
+];
+
+function renderCards(data, selectedCategory) {
+    const container = document.getElementById('dataList');
+    container.innerHTML = '';
+
+    if (data.length === 0) {
+        container.innerHTML = '<p style="text-align:center; padding: 20px; color: #64748b;">No colleges found matching your search.</p>';
+        return;
+    }
+
+    data.forEach(item => {
+        // Determine which cutoff to show based on the dropdown
+        let displayCutoff = item.gm; 
+        if(selectedCategory === '2AG') displayCutoff = item.cat2a;
+        if(selectedCategory === 'SCG') displayCutoff = item.scg;
+
+        const card = `
+            <div class="data-card">
+                <div class="card-header">
+                    <div>
+                        <div class="college-name">${item.college}</div>
+                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">Code: ${item.code}</div>
+                    </div>
+                    <div class="branch-tag">${item.branch}</div>
+                </div>
+                <div class="cutoff-grid">
+                    <div class="cutoff-stat">
+                        <span class="stat-label">Category (${selectedCategory})</span>
+                        <span class="stat-value">#${displayCutoff.toLocaleString()}</span>
+                    </div>
+                    <div class="cutoff-stat" style="text-align: right;">
+                        <span class="stat-label">Action</span>
+                        <a href="predictor.html" style="color: #2563eb; font-size: 0.85rem; font-weight: 700; text-decoration: none;">Check Chances →</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += card;
+    });
+}
+
+function filterData() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    const branch = document.getElementById('branchFilter').value;
+    const category = document.getElementById('categoryFilter').value;
+
+    const filtered = cutoffDatabase.filter(item => {
+        const matchesSearch = item.college.toLowerCase().includes(searchText) || item.code.toLowerCase().includes(searchText);
+        const matchesBranch = (branch === 'ALL' || item.branch === branch);
+        return matchesSearch && matchesBranch;
+    });
+
+    renderCards(filtered, category);
+}
+
+// Initial render
+renderCards(cutoffDatabase, 'GM');
+</script>
+
+</body>
+</html>
