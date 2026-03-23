@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About StudentHub | KCET Predictor 2026</title>
+    <meta name="description" content="Learn about StudentHub — a free KCET college predictor and cutoff tool built for Karnataka engineering aspirants.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #ffffff; --surface: #f8fafc; --text: #0f172a; --text-light: #64748b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; line-height: 1.7; }
+
+        header { padding: 15px 20px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; background: white; z-index: 100; }
+        .logo { font-weight: 800; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+
+        .container { padding: 30px 20px; max-width: 700px; margin: 0 auto; }
+
+        h1 { font-size: 1.8rem; margin-bottom: 8px; color: #0f172a; letter-spacing: -0.5px; }
+        h2 { font-size: 1.15rem; margin-top: 30px; margin-bottom: 10px; color: #1e293b; }
+        p { font-size: 0.95rem; color: var(--text-light); margin-bottom: 14px; }
+
+        .tagline { font-size: 1rem; color: var(--primary); font-weight: 700; margin-bottom: 24px; }
+
+        .info-card { background: var(--surface); border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .info-card h3 { font-size: 1rem; color: #0f172a; margin-bottom: 6px; }
+        .info-card p { margin-bottom: 0; font-size: 0.9rem; }
+
+        .disclaimer-box { background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 16px 20px; margin-top: 24px; }
+        .disclaimer-box p { font-size: 0.85rem; color: #854d0e; margin-bottom: 0; }
+        .disclaimer-box strong { color: #92400e; }
+
+        .source-link { color: var(--primary); font-weight: 700; text-decoration: none; }
+        .source-link:hover { text-decoration: underline; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; z-index: 100; }
+        .nav-item { text-decoration: none; color: var(--text-light); font-size: 0.75rem; text-align: center; font-weight: 600; }
+        .nav-item.active { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">StudentHub</a>
+</header>
+
+<div class="container">
+    <h1>About StudentHub</h1>
+    <p class="tagline">Free tools for Karnataka engineering aspirants 🎓</p>
+
+    <p>StudentHub is a student-built toolkit designed to help KCET aspirants make smarter, data-backed decisions during the KEA counseling process. No paywalls, no fake promises — just honest tools.</p>
+
+    <h2>What we offer</h2>
+
+    <div class="info-card">
+        <h3>📊 KCET College Predictor</h3>
+        <p>Enter your expected KCET rank and branch to get a personalized list of colleges classified as Safe, Moderate, or Dream — based on 2024 and 2025 Round 3 closing ranks.</p>
+    </div>
+
+    <div class="info-card">
+        <h3>📋 Interactive Cutoff Explorer</h3>
+        <p>Browse and filter KCET cutoff trends across 40+ colleges by branch and category (GM, 2A, SC). Designed to help you shortlist colleges quickly.</p>
+    </div>
+
+    <div class="info-card">
+        <h3>🎓 SGPA Calculator</h3>
+        <p>Calculate your semester GPA using the standard 10-point grading scale followed by VTU, REVA, and most autonomous colleges in Karnataka.</p>
+    </div>
+
+    <h2>Data Sources</h2>
+    <p>All cutoff data is derived from the <strong>official KEA (Karnataka Examinations Authority) Seat Matrix</strong> published after Round 3 counseling for 2024 and 2025. You can verify data at the official KEA portal: <a href="https://kea.kar.nic.in" class="source-link" target="_blank">kea.kar.nic.in →</a></p>
+
+    <div class="disclaimer-box">
+        <p><strong>⚠️ Disclaimer:</strong> All predictions and cutoff figures on this site are for reference and guidance only. Actual KCET 2026 cutoffs will depend on the final seat matrix, paper difficulty, and student demand. Always verify with the official KEA website before making decisions.</p>
+    </div>
+
+    <h2>Contact & Feedback</h2>
+    <p>Found an error in the data? Have a suggestion? We'd love to hear from you. This tool is built by a student, for students — your feedback directly improves it.</p>
+</div>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item">🏠<br>Home</a>
+    <a href="predictor.html" class="nav-item">📊<br>Predictor</a>
+    <a href="cutoffs.html" class="nav-item">📋<br>Cutoffs</a>
+    <a href="sgpa.html" class="nav-item">🎓<br>SGPA</a>
+</nav>
+
+</body>
+</html>
