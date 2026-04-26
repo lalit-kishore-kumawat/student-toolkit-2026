@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Calculator 2026 | VTU Grading Scale | StudentHub</title>
+    <meta name="description"
+        content="Free SGPA calculator for VTU, REVA and autonomous Karnataka colleges. Standard 10-point grading scale. Instant results.">
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="SGPA Calculator | StudentHub">
+    <meta property="og:description"
+        content="Free SGPA calculator for VTU and Karnataka autonomous colleges. Standard 10-point scale.">
+    <meta property="og:url" content="https://student-toolkit-2026.vercel.app/sgpa.html">
+    <meta property="og:type" content="website">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SGPA Calculator",
+      "url": "https://student-toolkit-2026.vercel.app/sgpa.html",
+      "description": "Free SGPA calculator for VTU and Karnataka engineering colleges"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Specific overrides for SGPA Calculator */
+        .subject-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .subject-row .input-group {
+            margin-bottom: 0;
+        }
+
+        .btn-add {
+            background: rgba(239, 246, 255, 0.8);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 0.875rem 1rem;
+            display: block;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-add:hover {
+            background: #dbeafe;
+            transform: translateY(-1px);
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(239, 246, 255, 0.9);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 2px solid var(--primary);
+            display: none;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(8px);
+        }
+
+        .result-box h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .result-box p {
+            font-size: 0.95rem;
+            color: #1e40af;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Remove button for dynamic rows */
+        .btn-remove {
+            background: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fca5a5;
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1.25rem;
+        }
+
+        .btn-remove:hover {
+            background: #fca5a5;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-bg">
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">S</div>
+            StudentHub
+        </a>
+    </header>
+
+    <div class="container">
+        <h1>SGPA Calculator</h1>
+        <p class="subtitle">Standard 10-Point Scale (VTU / REVA / Autonomous)</p>
+
+        <div class="form-card" style="padding: 1.5rem 1rem;">
+            <div id="subjects-container">
+                <div class="subject-row">
+                    <div class="input-group">
+                        <label>Credits</label>
+                        <input type="number" class="credit-input" placeholder="e.g. 4" min="1" max="5">
+                    </div>
+                    <div class="input-group">
+                        <label>Grade</label>
+                        <select class="grade-input">
+                            <option value="10">O (90-100)</option>
+                            <option value="9">A+ (80-89)</option>
+                            <option value="8">A (70-79)</option>
+                            <option value="7">B+ (60-69)</option>
+                            <option value="6">B (55-59)</option>
+                            <option value="5">C (50-54)</option>
+                            <option value="0">F (Fail)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-add" onclick="addSubject()">+ Add Another Subject</button>
+            <button class="btn-primary" onclick="calculateSGPA()" style="margin-top: 1.5rem;">Calculate SGPA →</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <h2><span id="finalSGPA">0.00</span></h2>
+            <p>Total Credits: <span id="totalCredits">0</span></p>
+        </div>
+    </div>
+
+    <footer
+        style="background:#0f172a; color:#cbd5e1; padding:20px; font-size:0.82rem; text-align:center; margin-top:10px;">
+        © 2026 StudentHub • Free tools for Karnataka students<br>
+        <a href="https://kea.kar.nic.in" target="_blank" rel="noopener noreferrer"
+            style="color:#64748b; text-decoration:none;">kea.kar.nic.in</a>
+        — Official KEA Website
+    </footer>
+
+    <div class="bottom-nav-container">
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="predictor.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Predictor</span>
+            </a>
+            <a href="cutoffs.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Cutoffs</span>
+            </a>
+            <a href="sgpa.html" class="nav-item active">
+                <span class="nav-icon">📈</span>
+                <span>SGPA</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function addSubject() {
+            const container = document.getElementById("subjects-container");
+            const newRow = document.createElement("div");
+            newRow.className = "subject-row";
+            newRow.innerHTML = `
+            <div class="input-group">
+                <label>Credits</label>
+                <input type="number" class="credit-input" placeholder="e.g. 4" min="1" max="5">
+            </div>
+            <div class="input-group">
+                <label>Grade</label>
+                <select class="grade-input">
+                    <option value="10">O (90-100)</option>
+                    <option value="9">A+ (80-89)</option>
+                    <option value="8">A (70-79)</option>
+                    <option value="7">B+ (60-69)</option>
+                    <option value="6">B (55-59)</option>
+                    <option value="5">C (50-54)</option>
+                    <option value="0">F (Fail)</option>
+                </select>
+            </div>
+            <button class="btn-remove" onclick="this.parentElement.remove()" title="Remove subject">×</button>
+        `;
+            container.appendChild(newRow);
+        }
+
+        function calculateSGPA() {
+            const credits = document.querySelectorAll(".credit-input");
+            const grades = document.querySelectorAll(".grade-input");
+
+            let totalCredits = 0;
+            let totalPoints = 0;
+
+            for (let i = 0; i < credits.length; i++) {
+                let creditValue = parseFloat(credits[i].value);
+                let gradeValue = parseFloat(grades[i].value);
+
+                if (!isNaN(creditValue)) {
+                    totalCredits += creditValue;
+                    totalPoints += (creditValue * gradeValue);
+                }
+            }
+
+            if (totalCredits === 0) {
+                alert("Please enter at least one valid subject with credits!");
+                return;
+            }
+
+            let sgpa = (totalPoints / totalCredits).toFixed(2);
+
+            document.getElementById("finalSGPA").innerText = sgpa;
+            document.getElementById("totalCredits").innerText = totalCredits;
+
+            // Add animation class
+            const resultBox = document.getElementById("resultBox");
+            resultBox.style.display = "block";
+            resultBox.style.animation = "none";
+            setTimeout(() => resultBox.style.animation = "float 0.5s ease-out forwards", 10);
+        }
+    </script>
+
+</body>
+
+</html>

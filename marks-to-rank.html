@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCET Marks to Rank Calculator 2026 | StudentHub</title>
+    <meta name="description"
+        content="Free KCET 2026 marks to rank calculator using equal-weighted KCET PCM and qualifying exam PCM scores. Estimate your Karnataka engineering rank range instantly.">
+    <link rel="canonical" href="https://student-toolkit-2026.vercel.app/marks-to-rank.html">
+    <meta property="og:title" content="KCET Marks to Rank Calculator 2026 | StudentHub">
+    <meta property="og:description"
+        content="Estimate your KCET 2026 engineering rank using KCET PCM marks and board PCM marks with equal weightage.">
+    <meta property="og:url" content="https://student-toolkit-2026.vercel.app/marks-to-rank.html">
+    <meta property="og:type" content="website">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "KCET Marks to Rank Calculator 2026",
+      "url": "https://student-toolkit-2026.vercel.app/marks-to-rank.html",
+      "description": "Estimate KCET engineering rank using equal-weighted KCET PCM and qualifying exam PCM scores"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="ambient-bg">
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">S</div>
+            StudentHub
+        </a>
+    </header>
+
+    <div class="container">
+        <h1>Marks to Rank Converter</h1>
+        <p class="subtitle">Estimate your KCET 2026 engineering rank using equal-weighted KCET PCM and board PCM scores</p>
+
+        <div class="form-card">
+            <div class="tagline" style="margin-bottom: 1rem;">Official basis: KCET PCM + qualifying exam PCM in equal proportions</div>
+            <div class="info-card" style="margin-bottom: 1rem; background: rgba(239, 246, 255, 0.8); border-color: #bfdbfe;">
+                <p style="font-size: 0.9rem; color: #1e40af; margin: 0;">
+                    Enter your <strong>KCET Physics, Chemistry, Math</strong> marks out of 60 and your
+                    <strong>board PCM</strong> marks out of 100 each.
+                </p>
+            </div>
+            <h2 style="font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem;">KCET PCM Marks</h2>
+            <div class="input-group">
+                <label>Physics Marks (out of 60)</label>
+                <input type="number" id="phy" placeholder="e.g. 45" min="0" max="60">
+            </div>
+            <div class="input-group">
+                <label>Chemistry Marks (out of 60)</label>
+                <input type="number" id="che" placeholder="e.g. 50" min="0" max="60">
+            </div>
+            <div class="input-group">
+                <label>Mathematics Marks (out of 60)</label>
+                <input type="number" id="mat" placeholder="e.g. 55" min="0" max="60">
+            </div>
+
+            <h2 style="font-size: 1.1rem; margin-top: 0.5rem; margin-bottom: 1rem;">Qualifying Exam PCM Marks</h2>
+            <div class="input-group">
+                <label>Board Physics Marks (out of 100)</label>
+                <input type="number" id="boardPhy" placeholder="e.g. 92" min="0" max="100">
+            </div>
+            <div class="input-group">
+                <label>Board Chemistry Marks (out of 100)</label>
+                <input type="number" id="boardChe" placeholder="e.g. 95" min="0" max="100">
+            </div>
+            <div class="input-group">
+                <label>Board Mathematics Marks (out of 100)</label>
+                <input type="number" id="boardMat" placeholder="e.g. 98" min="0" max="100">
+            </div>
+
+            <button class="btn-primary" id="calcBtn" onclick="calculateRank()">Estimate My Rank →</button>
+            <p id="error-msg"
+                style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none; font-weight: 600; text-align: center;">
+                ⚠️ Please enter valid KCET marks (0-60) and board marks (0-100) for all six fields.</p>
+        </div>
+
+        <div id="results-container" style="display: none; margin-top: 1.5rem;">
+            <div class="info-card" style="text-align: center;">
+                <h3 style="margin-bottom: 5px; color: var(--text-muted);">Your KCET PCM Total</h3>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;"><span
+                        id="totalScore">0</span><span style="font-size: 1.2rem; color: #94a3b8;"> / 180</span></div>
+
+                <h3 style="margin-bottom: 5px; color: var(--text-muted);">Your Board PCM Total</h3>
+                <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;"><span
+                        id="boardTotalScore">0</span><span style="font-size: 1.1rem; color: #94a3b8;"> / 300</span></div>
+
+                <h3 style="margin-bottom: 5px; color: var(--text-muted);">Equal-Weighted Composite Score</h3>
+                <div
+                    style="font-size: 1.5rem; font-weight: 800; color: #1e40af; margin-bottom: 1rem; background: rgba(219,234,254,0.6); padding: 10px; border-radius: var(--radius-md); display: inline-block;">
+                    <span id="compositeScore">0.00</span><span style="font-size: 1rem; color: #475569;"> / 100</span>
+                </div>
+
+                <h3 style="margin-bottom: 5px; color: var(--text-muted);">Estimated Rank Range</h3>
+                <div id="rankRange"
+                    style="font-size: 2rem; font-weight: 800; color: var(--primary); background: rgba(59,130,246,0.1); padding: 10px; border-radius: var(--radius-md); display: inline-block;">
+                </div>
+
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 1.5rem;">Note: This is an estimation based on
+                    past year trends. Actual ranks may vary depending on paper difficulty, normalized board performance,
+                    and counselling-year competition.</p>
+
+                <div style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                    <a href="predictor.html" class="btn-primary"
+                        style="display: inline-block; width: auto; padding: 10px 24px; text-decoration: none;">Use
+                        College Predictor 🎯</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background:#0f172a; color:#cbd5e1; margin-top: 2rem;">
+        <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+            <div class="footer-grid">
+                <div>
+                    <strong style="color: white; display: block; margin-bottom: 8px;">StudentHub</strong>
+                    Honest, free tools for Karnataka KCET aspirants. Not affiliated with KEA.
+                </div>
+                <div>
+                    <strong style="color: white; display: block; margin-bottom: 8px;">Tools</strong>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px;"><a href="predictor.html"
+                                style="color: #94a3b8; text-decoration: none;">College Predictor</a></li>
+                        <li style="margin-bottom: 6px;"><a href="cutoffs.html"
+                                style="color: #94a3b8; text-decoration: none;">Cutoff Explorer</a></li>
+                        <li style="margin-bottom: 6px;"><a href="sgpa.html"
+                                style="color: #94a3b8; text-decoration: none;">SGPA Calculator</a></li>
+                        <li style="margin-bottom: 6px;"><a href="marks-to-rank.html"
+                                style="color: #94a3b8; text-decoration: none;">Marks to Rank</a></li>
+                        <li style="margin-bottom: 6px;"><a href="kcet-cutoff-2025.html"
+                                style="color: #94a3b8; text-decoration: none;">KCET Cutoff 2025</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <strong style="color: white; display: block; margin-bottom: 8px;">Info</strong>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px;"><a href="about.html"
+                                style="color: #94a3b8; text-decoration: none;">About StudentHub</a></li>
+                        <li style="margin-bottom: 6px;"><a href="https://kea.kar.nic.in" target="_blank"
+                                rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none;">Official KEA
+                                Website</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="border-top: 1px solid #1e293b; padding-top: 16px; text-align: center; font-size: 0.78rem; color: #475569; margin-top: 20px;">
+                © 2026 StudentHub • Independent student-built tool
+            </div>
+        </div>
+    </footer>
+
+    <div class="bottom-nav-container">
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="predictor.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Predictor</span>
+            </a>
+            <a href="cutoffs.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Cutoffs</span>
+            </a>
+            <a href="sgpa.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span>SGPA</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function calculateRank() {
+            const phy = parseInt(document.getElementById('phy').value);
+            const che = parseInt(document.getElementById('che').value);
+            const mat = parseInt(document.getElementById('mat').value);
+            const boardPhy = parseInt(document.getElementById('boardPhy').value);
+            const boardChe = parseInt(document.getElementById('boardChe').value);
+            const boardMat = parseInt(document.getElementById('boardMat').value);
+            const errorMsg = document.getElementById('error-msg');
+            const resultsContainer = document.getElementById('results-container');
+
+            if (
+                isNaN(phy) || isNaN(che) || isNaN(mat) ||
+                isNaN(boardPhy) || isNaN(boardChe) || isNaN(boardMat) ||
+                phy < 0 || phy > 60 || che < 0 || che > 60 || mat < 0 || mat > 60 ||
+                boardPhy < 0 || boardPhy > 100 || boardChe < 0 || boardChe > 100 || boardMat < 0 || boardMat > 100
+            ) {
+                errorMsg.style.display = 'block';
+                resultsContainer.style.display = 'none';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+
+            const total = phy + che + mat;
+            const boardTotal = boardPhy + boardChe + boardMat;
+            const kcetPercent = (total / 180) * 100;
+            const boardPercent = (boardTotal / 300) * 100;
+            const composite = (kcetPercent + boardPercent) / 2;
+
+            document.getElementById('totalScore').innerText = total;
+            document.getElementById('boardTotalScore').innerText = boardTotal;
+            document.getElementById('compositeScore').innerText = composite.toFixed(2);
+
+            let rank = "";
+            if (composite >= 95) rank = "1 - 500";
+            else if (composite >= 90) rank = "500 - 1,500";
+            else if (composite >= 85) rank = "1,500 - 3,000";
+            else if (composite >= 80) rank = "3,000 - 6,000";
+            else if (composite >= 75) rank = "6,000 - 10,000";
+            else if (composite >= 70) rank = "10,000 - 18,000";
+            else if (composite >= 65) rank = "18,000 - 30,000";
+            else if (composite >= 60) rank = "30,000 - 45,000";
+            else if (composite >= 55) rank = "45,000 - 65,000";
+            else if (composite >= 50) rank = "65,000 - 90,000";
+            else if (composite >= 45) rank = "90,000 - 120,000";
+            else rank = "> 120,000";
+
+            document.getElementById('rankRange').innerText = rank;
+            resultsContainer.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

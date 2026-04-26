@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCET Cutoff Explorer 2026 | Filter by Branch & Category | StudentHub</title>
+    <meta name="description"
+        content="Search and filter KCET cutoffs by branch (CSE, AIML, ECE) and category (GM, 2A, SC) for Karnataka engineering colleges. Based on KEA 2024 & 2025 data.">
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="KCET Cutoff Explorer 2026 | StudentHub">
+    <meta property="og:description"
+        content="Filter KCET cutoffs by branch and category for top Karnataka colleges. Free tool based on KEA 2024 & 2025 data.">
+    <meta property="og:url" content="https://student-toolkit-2026.vercel.app/cutoffs.html">
+    <meta property="og:type" content="website">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "KCET Cutoff Explorer",
+      "url": "https://student-toolkit-2026.vercel.app/cutoffs.html",
+      "description": "Filter KCET cutoffs by branch and category for Karnataka engineering colleges"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Specific overrides for Cutoffs */
+        .page-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(12px);
+            margin-bottom: 0;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .page-header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .trust-badge {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: white;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .seo-bridge {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(239, 246, 255, 0.8);
+            border-radius: var(--radius-sm);
+            border: 1px dashed #bfdbfe;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(4px);
+        }
+
+        .seo-bridge a {
+            color: #1e40af;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            padding: 15px 20px;
+            position: sticky;
+            top: 68px;
+            /* account for header height */
+            background: rgba(248, 250, 252, 0.85);
+            z-index: 90;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            backdrop-filter: blur(12px);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255, 255, 255, 0.9);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #cbd5e1;
+            background: rgba(226, 232, 240, 0.7);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-reset:hover {
+            background: #cbd5e1;
+            color: var(--text-main);
+        }
+
+        .data-list {
+            padding: 15px 20px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* The data cards reuse the global .data-card, but we add specifics here */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .college-name {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.3;
+        }
+
+        .branch-tag {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            font-weight: 800;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .best-match {
+            color: #d97706;
+            font-size: 0.7rem;
+            font-weight: 800;
+            background: #fef3c7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .cutoff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .cutoff-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .seo-footer {
+            padding: 25px 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+            line-height: 1.6;
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-bg">
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">S</div>
+            StudentHub
+        </a>
+    </header>
+
+    <div class="page-header">
+        <div class="container" style="padding: 0; max-width: 720px; margin: 0 auto;">
+            <h1>KCET Interactive Cutoffs</h1>
+            <p>Browse expected KCET cutoff trends based on previous year data.</p>
+
+
+            <div class="seo-bridge">
+                <span>📖 Read the full analysis:</span>
+                <a href="kcet-cutoff-2025.html">KCET 2025 Guide →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-bar">
+        <div style="max-width: 720px; margin: 0 auto;">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search college (e.g., BMSCE, REVA)..."
+                onkeyup="filterDataDebounced()">
+
+            <div class="filter-row">
+                <select id="branchFilter" class="filter-select" onchange="filterData()">
+                    <option value="ALL">All Branches</option>
+                    <option value="CSE">CSE</option>
+                    <option value="AIML">AI/ML</option>
+                    <option value="ISE">ISE</option>
+                    <option value="DS">Data Science</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                </select>
+                <select id="categoryFilter" class="filter-select" onchange="filterData()">
+                    <option value="GM">General (GM)</option>
+                    <option value="2AG">Category 2A</option>
+                    <option value="SCG">SC Category</option>
+                </select>
+            </div>
+            <button class="btn-reset" onclick="resetFilters()">↺ Reset Filters</button>
+        </div>
+    </div>
+
+    <div class="data-list" id="dataList">
+        <!-- Rendered via JS -->
+    </div>
+
+    <div class="container" style="padding-top: 0;">
+        <div class="seo-footer">
+            <p>KCET cutoff ranks vary every year based on seat matrix changes, difficulty levels, and student demand.
+                Always consider a safe margin while choosing colleges. Data based on <a href="https://kea.kar.nic.in"
+                    target="_blank" rel="noopener noreferrer" style="color:var(--text-main); font-weight: 600;">KEA</a>
+                2024 & 2025 closing ranks.
+            </p>
+        </div>
+    </div>
+
+    <div class="bottom-nav-container">
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="predictor.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Predictor</span>
+            </a>
+            <a href="cutoffs.html" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span>Cutoffs</span>
+            </a>
+            <a href="sgpa.html" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span>SGPA</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // KEA 2024 & 2025 CUTOFF DATA
+        // Source: KEA UGCET Provisional Allotment Cut-Off Ranks (Rest of Karnataka)
+        // kea.kar.nic.in
+        const cutoffDatabase = [
+            // RVCE
+            { college: "RV College of Engineering", code: "E005", branch: "CSE", gm: 446, cat2a: 1398, scg: 6629 },
+            { college: "RV College of Engineering", code: "E005", branch: "AIML", gm: 676, cat2a: 1617, scg: 7823 },
+            { college: "RV College of Engineering", code: "E005", branch: "DS", gm: 724, cat2a: 1636, scg: 9394 },
+            { college: "RV College of Engineering", code: "E005", branch: "ECE", gm: 914, cat2a: 2196, scg: 14356 },
+            { college: "RV College of Engineering", code: "E005", branch: "EEE", gm: 1845, cat2a: 7765, scg: 14486 },
+            // PES University
+            { college: "PES University", code: "E009", branch: "CSE", gm: 1376, cat2a: 3160, scg: 16135 },
+            { college: "PES University", code: "E009", branch: "AIML", gm: 2168, cat2a: 4417, scg: 21774 },
+            { college: "PES University", code: "E009", branch: "ECE", gm: 3340, cat2a: 7553, scg: 29471 },
+            // MSRIT
+            { college: "Ramaiah Institute of Technology", code: "E006", branch: "CSE", gm: 1687, cat2a: 2574, scg: 11390 },
+            { college: "Ramaiah Institute of Technology", code: "E006", branch: "AIML", gm: 2756, cat2a: 3896, scg: 12657 },
+            { college: "Ramaiah Institute of Technology", code: "E006", branch: "ISE", gm: 3083, cat2a: 4481, scg: 22926 },
+            { college: "Ramaiah Institute of Technology", code: "E006", branch: "DS", gm: 3416, cat2a: 4160, scg: 13337 },
+            { college: "Ramaiah Institute of Technology", code: "E006", branch: "ECE", gm: 3746, cat2a: 6602, scg: 20202 },
+            // BMSCE (E048)
+            { college: "BMS College of Engineering", code: "E048", branch: "CSE", gm: 3465, cat2a: 5373, scg: 22571 },
+            { college: "BMS College of Engineering", code: "E048", branch: "AIML", gm: 4398, cat2a: 6087, scg: 24580 },
+            { college: "BMS College of Engineering", code: "E048", branch: "DS", gm: 3899, cat2a: 5452, scg: 25092 },
+            { college: "BMS College of Engineering", code: "E048", branch: "ISE", gm: 3988, cat2a: 5591, scg: 16707 },
+            { college: "BMS College of Engineering", code: "E048", branch: "ECE", gm: 4400, cat2a: 8307, scg: 36381 },
+            // JSS S&T Mysuru (E021 / E057)
+            { college: "JSS Science & Technology University", code: "E057", branch: "CSE", gm: 6167, cat2a: 8729, scg: 27697 },
+            { college: "JSS Science & Technology University", code: "E057", branch: "AIML", gm: 7022, cat2a: 8955, scg: 30401 },
+            { college: "JSS Science & Technology University", code: "E057", branch: "ISE", gm: 8356, cat2a: 11847, scg: 40095 },
+            { college: "JSS Science & Technology University", code: "E057", branch: "ECE", gm: 6701, cat2a: 10216, scg: 44439 },
+            // UVCE
+            { college: "UVCE Bangalore", code: "E001", branch: "CSE", gm: 4732, cat2a: 7544, scg: 24450 },
+            { college: "UVCE Bangalore", code: "E001", branch: "AIML", gm: 6389, cat2a: 8424, scg: 26425 },
+            { college: "UVCE Bangalore", code: "E001", branch: "ISE", gm: 6502, cat2a: 8266, scg: 31770 },
+            { college: "UVCE Bangalore", code: "E001", branch: "ECE", gm: 8155, cat2a: 10598, scg: 37264 },
+            // DSCE
+            { college: "Dayananda Sagar College of Engineering", code: "E007", branch: "CSE", gm: 5630, cat2a: 7546, scg: 28698 },
+            { college: "Dayananda Sagar College of Engineering", code: "E007", branch: "AIML", gm: 6700, cat2a: 7960, scg: 23698 },
+            { college: "Dayananda Sagar College of Engineering", code: "E007", branch: "DS", gm: 6913, cat2a: 8019, scg: 35327 },
+            { college: "Dayananda Sagar College of Engineering", code: "E007", branch: "ISE", gm: 7704, cat2a: 9510, scg: 37996 },
+            { college: "Dayananda Sagar College of Engineering", code: "E007", branch: "ECE", gm: 9054, cat2a: 13081, scg: 46740 },
+            // BIT Bangalore
+            { college: "Bangalore Institute of Technology", code: "E008", branch: "CSE", gm: 7450, cat2a: 9008, scg: 34482 },
+            { college: "Bangalore Institute of Technology", code: "E008", branch: "AIML", gm: 8962, cat2a: 10444, scg: 36972 },
+            { college: "Bangalore Institute of Technology", code: "E008", branch: "DS", gm: 9126, cat2a: 10204, scg: 37427 },
+            { college: "Bangalore Institute of Technology", code: "E008", branch: "ISE", gm: 9985, cat2a: 12852, scg: 47991 },
+            { college: "Bangalore Institute of Technology", code: "E008", branch: "ECE", gm: 11787, cat2a: 14902, scg: 58855 },
+            // SIT Tumkur
+            { college: "SIT Tumkur", code: "E016", branch: "CSE", gm: 9367, cat2a: 11341, scg: 35795 },
+            { college: "SIT Tumkur", code: "E016", branch: "AIML", gm: 9185, cat2a: 13113, scg: 31855 },
+            { college: "SIT Tumkur", code: "E016", branch: "ISE", gm: 11215, cat2a: 14164, scg: 48720 },
+            { college: "SIT Tumkur", code: "E016", branch: "ECE", gm: 13094, cat2a: 15885, scg: 54316 },
+            // Dr. Ambedkar Institute of Technology
+            { college: "Dr. Ambedkar Institute of Technology", code: "E004", branch: "CSE", gm: 11706, cat2a: 14588, scg: 34503 },
+            { college: "Dr. Ambedkar Institute of Technology", code: "E004", branch: "ECE", gm: 20095, cat2a: 26745, scg: 62762 },
+            // SDM College Dharwad
+            { college: "SDM College of Engineering Dharwad", code: "E034", branch: "CSE", gm: 15763, cat2a: 19670, scg: 59047 },
+            { college: "SDM College of Engineering Dharwad", code: "E034", branch: "AIML", gm: 17855, cat2a: 19535, scg: 62999 },
+            { college: "SDM College of Engineering Dharwad", code: "E034", branch: "ISE", gm: 19287, cat2a: 21570, scg: 63302 },
+            // KLS Gogte Institute of Technology
+            { college: "KLS Gogte Institute of Technology", code: "E037", branch: "CSE", gm: 16033, cat2a: 19953, scg: 54006 },
+            { college: "KLS Gogte Institute of Technology", code: "E037", branch: "AIML", gm: 15496, cat2a: 19066, scg: 48838 },
+            { college: "KLS Gogte Institute of Technology", code: "E037", branch: "ECE", gm: 20914, cat2a: 23844, scg: 66829 },
+            // Malnad College of Engineering Hassan
+            { college: "Malnad College of Engineering", code: "E047", branch: "CSE", gm: 36496, cat2a: 51150, scg: 98471 },
+            { college: "Malnad College of Engineering", code: "E047", branch: "AIML", gm: 33073, cat2a: 43845, scg: 91626 },
+            { college: "Malnad College of Engineering", code: "E047", branch: "ECE", gm: 41407, cat2a: 58883, scg: 106834 },
+            // Basaveshwara Engineering College Bagalkote
+            { college: "Basaveshwara Engineering College", code: "E031", branch: "CSE", gm: 22902, cat2a: 27843, scg: 61734 },
+            { college: "Basaveshwara Engineering College", code: "E031", branch: "ECE", gm: 32381, cat2a: 35126, scg: 82397 },
+            // BMSCE ECE (E003)
+            { college: "BMS College of Engineering (Basavanagudi)", code: "E003", branch: "ECE", gm: 1893, cat2a: 5737, scg: 26045 },
+            // BMSIT (E043)
+            { college: "BMS Institute of Technology", code: "E043", branch: "CSE", gm: 5821, cat2a: 7500, scg: 15400 },
+            { college: "BMS Institute of Technology", code: "E043", branch: "AIML", gm: 7241, cat2a: 8900, scg: 17200 },
+            { college: "BMS Institute of Technology", code: "E043", branch: "ECE", gm: 11200, cat2a: 14500, scg: 24500 },
+            // NMIT (E097)
+            { college: "Nitte Meenakshi Institute of Technology", code: "E097", branch: "CSE", gm: 9540, cat2a: 11200, scg: 22100 },
+            { college: "Nitte Meenakshi Institute of Technology", code: "E097", branch: "AIML", gm: 11450, cat2a: 13500, scg: 26500 },
+            { college: "Nitte Meenakshi Institute of Technology", code: "E097", branch: "ECE", gm: 15300, cat2a: 18600, scg: 34100 },
+            // RNSIT (E089)
+            { college: "RNS Institute of Technology", code: "E089", branch: "CSE", gm: 13200, cat2a: 15600, scg: 31200 },
+            { college: "RNS Institute of Technology", code: "E089", branch: "AIML", gm: 15600, cat2a: 18400, scg: 35600 },
+            { college: "RNS Institute of Technology", code: "E089", branch: "ECE", gm: 21500, cat2a: 24500, scg: 45600 },
+            // CMRIT (E096)
+            { college: "CMR Institute of Technology", code: "E096", branch: "CSE", gm: 14500, cat2a: 17200, scg: 33400 },
+            { college: "CMR Institute of Technology", code: "E096", branch: "AIML", gm: 17200, cat2a: 19500, scg: 37800 },
+            { college: "CMR Institute of Technology", code: "E096", branch: "ECE", gm: 23400, cat2a: 27800, scg: 48900 },
+            // Vidyavardhaka (E066)
+            { college: "Vidyavardhaka College of Engineering", code: "E066", branch: "CSE", gm: 24500, cat2a: 28900, scg: 52100 },
+            { college: "Vidyavardhaka College of Engineering", code: "E066", branch: "AIML", gm: 28900, cat2a: 32100, scg: 58900 },
+            { college: "Vidyavardhaka College of Engineering", code: "E066", branch: "ECE", gm: 38500, cat2a: 43200, scg: 71200 },
+            // KSIT (E092)
+            { college: "K.S. Institute of Technology", code: "E092", branch: "CSE", gm: 34100, cat2a: 39500, scg: 65400 },
+            { college: "K.S. Institute of Technology", code: "E092", branch: "AIML", gm: 41200, cat2a: 46500, scg: 74500 },
+            { college: "K.S. Institute of Technology", code: "E092", branch: "ECE", gm: 54600, cat2a: 61200, scg: 89500 },
+        ];
+
+        const categoryMap = {
+            'GM': 'gm',
+            '2AG': 'cat2a',
+            'SCG': 'scg'
+        };
+
+        function renderCards(data, selectedCategory) {
+            const container = document.getElementById('dataList');
+
+            if (!cutoffDatabase || cutoffDatabase.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted);">⚠️ System Error: Cutoff data is currently unavailable. Please try again later.</div>`;
+                return;
+            }
+
+            const displayData = data.slice(0, 50);
+
+            let htmlOutput = `<div style="padding-bottom:12px; font-size:0.85rem; color:var(--text-muted); font-weight:600;">
+        Showing ${displayData.length} of ${data.length} results (Sorted by ${selectedCategory} Cutoff)
+    </div>`;
+
+            if (data.length === 0) {
+                container.innerHTML = `
+            <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(4px); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+                <p style="color: var(--text-muted); font-weight: 600;">No colleges found matching your criteria.</p>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">💡 Try selecting "All Branches" or clicking Reset Filters.</p>
+            </div>`;
+                return;
+            }
+
+            displayData.forEach((item, index) => {
+                let displayCutoff = item[categoryMap[selectedCategory]];
+                let highlight = index === 0 ? `<div class="best-match">⭐ MOST COMPETITIVE</div>` : "";
+
+                htmlOutput += `
+            <div class="data-card" style="margin-bottom: 12px;">
+                <div class="card-header">
+                    <div style="flex: 1; padding-right: 10px;">
+                        <div class="college-name">${item.college}</div>
+                        ${highlight}
+                        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px; font-weight: 600;">CODE: ${item.code}</div>
+                    </div>
+                    <div class="branch-tag">${item.branch}</div>
+                </div>
+                <div class="cutoff-grid">
+                    <div class="cutoff-stat">
+                        <span class="stat-label">Category (${selectedCategory})</span>
+                        <span class="stat-value">#${displayCutoff.toLocaleString()}</span>
+                    </div>
+                    <div class="cutoff-stat" style="text-align: right; justify-content: center;">
+                        <span style="font-size:0.65rem; color:#94a3b8; margin-bottom:4px; display:block;">Check if your rank fits here</span>
+                        <a href="predictor.html" style="background: var(--primary-light); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s;">Predict →</a>
+                    </div>
+                </div>
+            </div>
+        `;
+            });
+
+            container.innerHTML = htmlOutput;
+        }
+
+        let timeout;
+        function filterDataDebounced() {
+            clearTimeout(timeout);
+            timeout = setTimeout(filterData, 300);
+        }
+
+        function filterData() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+            const branch = document.getElementById('branchFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const filtered = cutoffDatabase
+                .filter(item => {
+                    const matchesSearch = item.college.toLowerCase().includes(searchText) || (item.code && item.code.toLowerCase().includes(searchText));
+                    const matchesBranch = (branch === 'ALL' || item.branch === branch);
+                    return matchesSearch && matchesBranch;
+                })
+                .sort((a, b) => {
+                    let sortKey = categoryMap[category];
+                    return a[sortKey] - b[sortKey];
+                });
+
+            renderCards(filtered, category);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('branchFilter').value = 'ALL';
+            document.getElementById('categoryFilter').value = 'GM';
+            filterData();
+        }
+
+        // Initial render
+        filterData();
+    </script>
+
+</body>
+
+</html>
