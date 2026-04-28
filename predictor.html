@@ -15,38 +15,161 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* ── Cutoff bar visual ── */
-    .cutoff-bar-wrap {
-      margin-top: 6px;
-    }
-
+    .cutoff-bar-wrap { margin-top: 6px; }
     .cutoff-bar-track {
-      height: 5px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-top: 4px;
+      height: 5px; background: var(--border);
+      border-radius: 99px; overflow: hidden; margin-top: 4px;
     }
-
     .cutoff-bar-fill {
-      height: 100%;
-      border-radius: 99px;
+      height: 100%; border-radius: 99px;
       transition: width .6s var(--ease);
     }
-
     .cutoff-bar-labels {
+      display: flex; justify-content: space-between;
+      font-size: .65rem; color: var(--text-3);
+      font-weight: 600; margin-top: 2px;
+    }
+
+    /* ── Result card ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .result-card {
+      background: white;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
-      font-size: .65rem;
-      color: var(--text-3);
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    /* ── Result card extra ── */
-    .result-card {
-      margin-bottom: .6rem;
+      align-items: center;
+      transition: transform .2s ease, box-shadow .2s ease;
+      animation: fadeInUp 0.3s ease;
       cursor: default;
     }
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,.07);
+    }
+    .result-card.best {
+      border: 2px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    /* ── College info ── */
+    .college-info h3 { font-size: .95rem; margin-bottom: 3px; }
+    .meta { font-size: .75rem; color: #64748b; }
+
+    /* ── Badge (override for target class) ── */
+    .badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: .7rem;
+      font-weight: 800;
+      text-align: center;
+      min-width: 70px;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .target { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: .8rem;
+      font-weight: 800;
+      margin: 18px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .section-safe   { color: #16a34a; }
+    .section-target { color: #f59e0b; }
+    .section-dream  { color: #dc2626; }
+
+    /* ── Result header & insight box ── */
+    .result-header {
+      background: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: .85rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+    .insight-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: .82rem;
+      color: #1e40af;
+      margin-bottom: 14px;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* ── Loading UX ── */
+    .loading-box {
+      text-align: center;
+      padding: 2rem 1.25rem;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r-lg);
+      backdrop-filter: blur(8px);
+    }
+    .loading-box .load-title {
+      font-weight: 700;
+      font-size: .975rem;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+    .loading-box .load-sub {
+      font-size: .8rem;
+      color: var(--text-3);
+    }
+    .load-dots span {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--blue-500);
+      border-radius: 50%;
+      margin: 12px 3px 0;
+      animation: dot-pulse .9s ease-in-out infinite;
+    }
+    .load-dots span:nth-child(2) { animation-delay: .2s; }
+    .load-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dot-pulse {
+      0%,80%,100% { transform: scale(.7); opacity: .5; }
+      40%          { transform: scale(1);  opacity: 1; }
+    }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--r-sm);
+      padding: .8rem 1rem;
+      font-size: .78rem;
+      color: #92400e;
+      font-weight: 500;
+      line-height: 1.55;
+      margin-top: 1rem;
+    }
+
+    /* ── Summary strip ── */
+    .summary-strip {
+      display: flex; gap: .5rem; margin-bottom: 1rem;
+    }
+    .summary-pill {
+      flex: 1; text-align: center;
+      border-radius: var(--r-md);
+      padding: .55rem .5rem;
+      font-size: .78rem; font-weight: 700;
+      border: 1px solid;
+    }
+    .summary-pill.safe     { background: var(--safe-bg);     color: var(--safe);     border-color: var(--safe-border); }
+    .summary-pill.moderate { background: var(--moderate-bg); color: var(--moderate); border-color: var(--moderate-border); }
+    .summary-pill.dream    { background: var(--dream-bg);    color: var(--dream);    border-color: var(--dream-border); }
+    .summary-pill .count { display: block; font-size: 1.2rem; font-weight: 800; letter-spacing: -.02em; }
 
     /* ── Imported banner ── */
     .import-banner {
@@ -58,65 +181,17 @@
       font-size: .85rem;
       color: #1e40af;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: flex; align-items: center; gap: 8px;
     }
 
-    /* ── Category filter tabs ── */
-    .filter-tabs {
-      display: flex;
-      gap: .45rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
+    /* ── Predict button gradient ── */
+    #predictBtn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 14px rgba(37,99,235,.3);
     }
-
-    .filter-tab {
-      padding: .4rem .85rem;
-      border-radius: var(--r-full);
-      border: 1.5px solid var(--border);
-      background: white;
-      font-size: .78rem;
-      font-weight: 700;
-      color: var(--text-3);
-      cursor: pointer;
-      transition: var(--transition);
-      font-family: inherit;
-    }
-
-    .filter-tab.active,
-    .filter-tab:hover {
-      border-color: var(--blue-500);
-      color: var(--blue-600);
-      background: var(--blue-50);
-    }
-
-    /* ── Summary row ── */
-    .summary-strip {
-      display: flex;
-      gap: .5rem;
-      margin-bottom: 1rem;
-    }
-
-    .summary-pill {
-      flex: 1;
-      text-align: center;
-      border-radius: var(--r-md);
-      padding: .55rem .5rem;
-      font-size: .78rem;
-      font-weight: 700;
-      border: 1px solid;
-    }
-
-    .summary-pill.safe     { background: var(--safe-bg);     color: var(--safe);     border-color: var(--safe-border); }
-    .summary-pill.moderate { background: var(--moderate-bg); color: var(--moderate); border-color: var(--moderate-border); }
-    .summary-pill.dream    { background: var(--dream-bg);    color: var(--dream);    border-color: var(--dream-border); }
-
-    .summary-pill .count {
-      display: block;
-      font-size: 1.2rem;
-      font-weight: 800;
-      letter-spacing: -.02em;
+    #predictBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(37,99,235,.38);
     }
   </style>
 </head>
@@ -181,6 +256,15 @@
     </button>
   </div>
 
+  <!-- ── Loading state ── -->
+  <div id="loading" style="display:none; margin-top:1.25rem;">
+    <div class="loading-box">
+      <div class="load-title">Analyzing your chances…</div>
+      <div class="load-sub">Matching cutoff trends • Calculating probabilities</div>
+      <div class="load-dots"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
   <!-- ── Results injected here ── -->
   <div id="results-container"></div>
 </div>
@@ -228,12 +312,14 @@
      PROBABILITY ENGINE
   ════════════════════════════════════ */
   function calcProbability(rank, cutoff) {
-    if (rank <= 1) return 100;
-    const adj = Math.floor(cutoff * 1.1);
-    if (rank >= adj) return 0;
-    const ratio = rank / adj;
-    if (ratio <= 0.5) return 100;
-    return Math.max(1, Math.round(100 - ((ratio - 0.5) / 0.5) * 100));
+    if (!cutoff || cutoff <= 0) return 0;
+    const ratio = rank / cutoff;
+    if (ratio <= 0.6)  return 90;
+    if (ratio <= 0.8)  return 75;
+    if (ratio <= 1.0)  return 55;
+    if (ratio <= 1.2)  return 35;
+    if (ratio <= 1.4)  return 20;
+    return 10;
   }
 
   function getCat(chance) {
@@ -261,44 +347,97 @@
   }
 
   /* ════════════════════════════════════
-     CARD RENDERER
+     RENDER HELPERS
   ════════════════════════════════════ */
-  function renderCard(item, i, rank) {
-    const isBest = i === 0;
-    const bestLabel = isBest ? `<div class="best-label">⭐ BEST MATCH</div>` : '';
+  function renderCard(item, i, rank, groupIndex) {
+    const isBest = groupIndex === 0 && i === 0;
     const cardClass = isBest ? 'result-card best' : 'result-card';
     const bkSaved = bookmarks.has(item.name + item.branch) ? 'saved' : '';
+    const badgeCss = item.chance >= 70 ? 'safe' : item.chance >= 40 ? 'target' : 'dream';
 
     return `
       <div class="${cardClass}">
         <div class="college-info">
-          ${bestLabel}
+          ${isBest ? '<div style="font-size:10px;color:#2563eb;font-weight:800;margin-bottom:3px;">⭐ BEST MATCH</div>' : ''}
           <div class="tier-badge">${item.tierLabel || '📍 Tier 5'}</div>
           <h3>${item.name}</h3>
           <div class="meta">
-            <span>${item.branch}</span>
-            <span>Cutoff: ${item.categoryCutoff.toLocaleString()}</span>
+            ${item.branch} • Cutoff: ${item.categoryCutoff.toLocaleString()}
           </div>
           ${cutoffBar(rank, item.categoryCutoff, item.css)}
         </div>
         <button class="bookmark-btn ${bkSaved}"
           onclick="toggleBookmark('${item.name}','${item.branch}',this)" title="Save">🔖</button>
-        <div class="badge ${item.css}">
-          ${item.emoji || item.label}
-          <span class="pct">${item.chance}%</span>
-        </div>
+        <div class="badge ${badgeCss}">${item.chance}%</div>
       </div>`;
+  }
+
+  function buildSection(titleHtml, cssClass, data, rank) {
+    if (!data.length) return '';
+    return `<div class="section-title ${cssClass}">${titleHtml}</div>`
+      + data.map((c, i) => renderCard(c, i, rank, i)).join('');
+  }
+
+  function renderResults(results, rank, branchChoice, catChoice) {
+    const container = document.getElementById('results-container');
+    if (!results.length) {
+      container.innerHTML = `
+        <div class="no-results">
+          😔 No colleges found for rank <b>${rank.toLocaleString()}</b>.<br>
+          <small>Try "All Tech Branches" or verify your rank range.</small>
+        </div>`;
+      return;
+    }
+
+    const safe     = results.filter(r => r.chance >= 70);
+    const target   = results.filter(r => r.chance >= 40 && r.chance < 70);
+    const dream    = results.filter(r => r.chance < 40);
+    const best     = results[0];
+
+    let html = `
+      <div class="summary-strip">
+        <div class="summary-pill safe"><span class="count">${safe.length}</span>Safe</div>
+        <div class="summary-pill moderate"><span class="count">${target.length}</span>Target</div>
+        <div class="summary-pill dream"><span class="count">${dream.length}</span>Dream</div>
+      </div>
+
+      <div class="result-header">
+        🎯 Rank <b>${rank.toLocaleString()}</b> &nbsp;•&nbsp;
+        ${branchChoice === 'ALL' ? 'All Branches' : branchChoice} &nbsp;•&nbsp; ${catChoice}
+      </div>
+
+      <div class="insight-box">
+        💡 Best chance: <b>${best.name} (${best.branch})</b><br>
+        Most realistic cutoff range: <b>${Math.round(best.categoryCutoff * 0.9).toLocaleString()} – ${best.categoryCutoff.toLocaleString()}</b>
+      </div>`;
+
+    html += buildSection('🟢 SAFE OPTIONS',   'section-safe',   safe,   rank);
+    html += buildSection('🟡 TARGET OPTIONS', 'section-target', target, rank);
+    html += buildSection('🔴 DREAM OPTIONS',  'section-dream',  dream,  rank);
+
+    html += `
+      <div class="disclaimer">
+        ⚠️ These are probability-based estimates using previous year data.
+        Actual allotment may vary depending on seat matrix and demand.
+      </div>
+      <div class="cta-bottom" style="margin-top:.75rem;">
+        📋 Explore all cutoffs by category → <a href="cutoffs.html">Cutoffs Tab</a>
+      </div>`;
+
+    container.innerHTML = html;
+    setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   }
 
   /* ════════════════════════════════════
      MAIN PREDICTION
   ════════════════════════════════════ */
   function runPrediction() {
-    const rankInput = document.getElementById('rank');
+    const rankInput    = document.getElementById('rank');
     const branchChoice = document.getElementById('branch').value;
-    const catChoice = document.getElementById('category').value;
-    const container = document.getElementById('results-container');
-    const btn = document.getElementById('predictBtn');
+    const catChoice    = document.getElementById('category').value;
+    const container    = document.getElementById('results-container');
+    const loading      = document.getElementById('loading');
+    const btn          = document.getElementById('predictBtn');
 
     const rank = parseInt(rankInput.value);
 
@@ -309,9 +448,11 @@
     }
     rankInput.classList.remove('error');
 
+    // Loading state
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Analyzing…';
     container.innerHTML = '';
+    loading.style.display = 'block';
 
     setTimeout(() => {
       const results = collegeData
@@ -323,7 +464,7 @@
         .filter(c => {
           if (!c.adjCutoff) return false;
           const branchOk = branchChoice === 'ALL' || c.branch === branchChoice;
-          return branchOk && rank <= c.adjCutoff * 1.2;
+          return branchOk && rank <= c.adjCutoff * 1.4;
         })
         .map(c => {
           const chance = calcProbability(rank, c.categoryCutoff);
@@ -332,66 +473,14 @@
         })
         .filter(c => c.chance > 0)
         .sort((a, b) => b.chance - a.chance)
-        .slice(0, 15);
+        .slice(0, 18);
 
-      if (results.length === 0) {
-        container.innerHTML = `
-          <div class="no-results">
-            😔 No matches found for rank <b>${rank.toLocaleString()}</b>.<br>
-            <small>Try "All Tech Branches" or verify your rank range.</small>
-          </div>`;
-      } else {
-        const safe     = results.filter(r => r.css === 'safe');
-        const moderate = results.filter(r => r.css === 'moderate');
-        const dream    = results.filter(r => r.css === 'dream');
-
-        let html = `
-          <!-- Summary strip -->
-          <div class="summary-strip">
-            <div class="summary-pill safe">
-              <span class="count">${safe.length}</span>Safe
-            </div>
-            <div class="summary-pill moderate">
-              <span class="count">${moderate.length}</span>Target
-            </div>
-            <div class="summary-pill dream">
-              <span class="count">${dream.length}</span>Dream
-            </div>
-          </div>
-          <div class="rank-range-tip">
-            🎯 Showing results for rank <b>${rank.toLocaleString()}</b> •
-            ${branchChoice === 'ALL' ? 'All Branches' : branchChoice} • ${catChoice}
-          </div>`;
-
-        if (safe.length) {
-          html += `<div class="results-group-label">🟢 Safe Colleges</div>`;
-          safe.forEach((item, i) => { html += renderCard(item, i, rank); });
-        }
-
-        if (moderate.length) {
-          html += `<div class="results-group-label">🟡 Target Colleges</div>`;
-          moderate.forEach((item, i) => { html += renderCard(item, i, rank); });
-        }
-
-        if (dream.length) {
-          html += `<div class="results-group-label">🔴 Dream Colleges</div>`;
-          dream.forEach((item, i) => { html += renderCard(item, i, rank); });
-        }
-
-        html += `
-          <div class="cta-bottom">
-            📋 Explore all cutoffs by category →
-            <a href="cutoffs.html">Cutoffs Tab</a>
-          </div>`;
-
-        container.innerHTML = html;
-      }
+      loading.style.display = 'none';
+      renderResults(results, rank, branchChoice, catChoice);
 
       btn.disabled = false;
       btn.innerHTML = 'Analyze My Chances →';
-
-      document.getElementById('results-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 420);
+    }, 1000);
   }
 
   /* ════════════════════════════════════
