@@ -14,10 +14,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 2.5rem 0 1.5rem;
+      padding: 1.5rem 0 1rem;
     }
 
     .hero-eyebrow {
@@ -36,20 +35,21 @@
     }
 
     .hero h1 {
-      font-size: clamp(1.9rem, 6vw, 2.7rem);
+      font-size: clamp(1.45rem, 5vw, 2.5rem);
       background: linear-gradient(135deg, #1e3a8a 0%, #4f46e5 60%, #2563eb 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: .65rem;
+      margin-bottom: .55rem;
+      word-break: break-word;
     }
 
     .hero-sub {
-      font-size: .975rem;
+      font-size: .9rem;
       color: var(--text-3);
-      max-width: 480px;
-      margin: 0 auto 2rem;
-      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto 1.25rem;
+      line-height: 1.6;
     }
 
     /* ── Hero Search ── */
@@ -57,24 +57,26 @@
       background: white;
       border: 1.5px solid var(--border);
       border-radius: var(--r-lg);
-      padding: .6rem .6rem .6rem 1rem;
+      padding: .5rem .5rem .5rem .9rem;
       display: flex;
       align-items: center;
-      gap: .6rem;
+      gap: .5rem;
       max-width: 480px;
-      margin: 0 auto 1rem;
+      margin: 0 auto .85rem;
       box-shadow: var(--shadow-md);
+      width: 100%;
     }
 
     .hero-search input {
       flex: 1;
       border: none;
       outline: none;
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-family: inherit;
       color: var(--text-1);
       background: transparent;
       min-width: 0;
+      padding: .4rem 0;
     }
 
     .hero-search input::placeholder { color: #94a3b8; }
@@ -83,10 +85,10 @@
       background: linear-gradient(135deg, var(--blue-600), var(--indigo-500));
       color: white;
       border: none;
-      border-radius: var(--r-md);
-      padding: .75rem 1.25rem;
+      border-radius: var(--r-sm);
+      padding: .7rem 1.1rem;
       font-weight: 700;
-      font-size: .975rem;
+      font-size: .9rem;
       font-family: inherit;
       cursor: pointer;
       white-space: nowrap;
@@ -98,6 +100,17 @@
     .hero-search-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 8px 20px rgba(37,99,235,.38);
+    }
+
+    @media (max-width: 400px) {
+      .hero-search {
+        flex-direction: column;
+        align-items: stretch;
+        padding: .75rem;
+        gap: .5rem;
+      }
+      .hero-search input { font-size: .95rem; }
+      .hero-search-btn { width: 100%; padding: .8rem; }
     }
 
     .hero-actions {
