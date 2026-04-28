@@ -4,195 +4,180 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KCET College Predictor 2026 | StudentHub</title>
-  <meta name="description" content="Free KCET 2026 college predictor using KEA 2024 & 2025 cutoff data. Get probability-based Safe, Moderate and Dream predictions for CSE, AIML, ECE and more.">
+  <meta name="description" content="Free KCET 2026 college predictor using KEA 2025 data. Probability-based Safe, Target and Dream predictions for CSE, AIML, ECE.">
   <link rel="canonical" href="https://student-toolkit-2026.vercel.app/predictor.html">
   <meta property="og:title" content="KCET College Predictor 2026 | StudentHub">
-  <meta property="og:description" content="Free KCET 2026 college predictor. Probability-based predictions for CSE, AIML, ECE across Karnataka colleges.">
+  <meta property="og:description" content="Free KCET 2026 college predictor. Instant results.">
   <meta property="og:url" content="https://student-toolkit-2026.vercel.app/predictor.html">
   <meta property="og:type" content="website">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"KCET College Predictor 2026","url":"https://student-toolkit-2026.vercel.app/predictor.html","description":"Predict your KCET 2026 college based on KEA 2024 & 2025 cutoff data"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"KCET College Predictor 2026","url":"https://student-toolkit-2026.vercel.app/predictor.html","description":"Predict your KCET 2026 college based on KEA 2025 cutoff data"}</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Cutoff bar visual ── */
-    .cutoff-bar-wrap { margin-top: 6px; }
-    .cutoff-bar-track {
-      height: 5px; background: var(--border);
-      border-radius: 99px; overflow: hidden; margin-top: 4px;
+    /* ── Filter tabs row (branch) ── */
+    .branch-tab-row {
+      display:flex;overflow-x:auto;gap:7px;
+      padding:0 0 4px;margin:.5rem 0 .75rem;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
     }
-    .cutoff-bar-fill {
-      height: 100%; border-radius: 99px;
-      transition: width .6s var(--ease);
+    .branch-tab-row::-webkit-scrollbar{display:none;}
+    .btab{
+      flex:0 0 auto;padding:.36rem .88rem;border-radius:var(--r-full);
+      background:rgba(30,41,59,.7);border:1px solid var(--border);
+      font-size:.74rem;font-weight:700;color:var(--text-3);
+      cursor:pointer;transition:var(--transition);font-family:inherit;
     }
-    .cutoff-bar-labels {
-      display: flex; justify-content: space-between;
-      font-size: .65rem; color: var(--text-3);
-      font-weight: 600; margin-top: 2px;
-    }
+    .btab.active{background:var(--primary);color:white;border-color:var(--primary);box-shadow:var(--glow-blue);}
+    .btab:hover:not(.active){background:rgba(37,99,235,.15);color:var(--blue-200);}
 
-    /* ── Result card ── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── Rank input row ── */
+    .rank-row{display:flex;gap:.55rem;align-items:stretch;margin-bottom:.65rem;}
+    .rank-row .rank-wrap{flex:1;position:relative;}
+    .rank-row .rank-icon{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none;}
+    #rank{
+      width:100%;padding:.8rem .75rem .8rem 2.25rem;
+      border:1.5px solid var(--border);border-radius:var(--r-md);
+      background:rgba(15,23,42,.85);color:var(--text-1);
+      font-size:1.05rem;font-weight:700;font-family:inherit;
+      transition:border-color .18s,box-shadow .18s;
     }
-    .result-card {
-      background: white;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform .2s ease, box-shadow .2s ease;
-      animation: fadeInUp 0.3s ease;
-      cursor: default;
+    #rank::placeholder{color:var(--text-3);font-weight:400;font-size:.9rem;}
+    #rank:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.2);}
+    #rank.error{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.15);}
+    .go-btn{
+      background:var(--primary-g);color:white;border:none;border-radius:var(--r-md);
+      padding:.8rem 1.15rem;font-weight:800;font-size:.9rem;font-family:inherit;
+      cursor:pointer;box-shadow:var(--glow-blue);transition:transform .18s,box-shadow .18s;
+      flex-shrink:0;white-space:nowrap;
     }
-    .result-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0,0,0,.07);
-    }
-    .result-card.best {
-      border: 2px solid #2563eb;
-      background: #eff6ff;
-    }
+    .go-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(37,99,235,.5);}
+    .go-btn:active{transform:scale(.97);}
+    .go-btn:disabled{opacity:.5;transform:none;box-shadow:none;}
 
-    /* ── College info ── */
-    .college-info h3 { font-size: .95rem; margin-bottom: 3px; }
-    .meta { font-size: .75rem; color: #64748b; }
+    /* ── Category select ── */
+    .cat-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.85rem;}
+    .cat-row label{font-size:.7rem;font-weight:700;color:var(--text-3);
+      text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;flex-shrink:0;}
+    #category{
+      flex:1;padding:.65rem .75rem;border:1.5px solid var(--border);border-radius:var(--r-sm);
+      background:rgba(15,23,42,.85);color:var(--text-1);font-size:.88rem;
+      font-family:inherit;font-weight:600;cursor:pointer;
+    }
+    #category:focus{outline:none;border-color:var(--primary);}
+    #category option{background:#1e293b;color:var(--text-1);}
 
-    /* ── Badge (override for target class) ── */
-    .badge {
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: .7rem;
-      font-weight: 800;
-      text-align: center;
-      min-width: 70px;
-      flex-direction: column;
-      gap: 2px;
+    /* ── Result card (stock app style) ── */
+    .result-card{
+      background:linear-gradient(145deg,#1a2438,#0f1a2e);
+      border:1px solid rgba(99,130,190,.14);
+      border-radius:14px;padding:12px 13px;
+      display:flex;justify-content:space-between;align-items:center;
+      gap:.6rem;box-shadow:0 2px 10px rgba(0,0,0,.4);
+      animation:card-in .25s var(--ease) both;
+      transition:transform .2s,box-shadow .2s,border-color .2s;
+      cursor:default;margin-bottom:.45rem;
     }
-    .target { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .result-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.5);border-color:rgba(99,130,190,.3);}
+    .result-card.best{border:1.5px solid rgba(37,99,235,.5);background:linear-gradient(145deg,#1a2d4d,#0c1a38);}
+    @keyframes card-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-    /* ── Section titles ── */
-    .section-title {
-      font-size: .8rem;
-      font-weight: 800;
-      margin: 18px 0 8px;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-    .section-safe   { color: #16a34a; }
-    .section-target { color: #f59e0b; }
-    .section-dream  { color: #dc2626; }
+    .college-info{flex:1;min-width:0;}
+    .college-info h3{font-size:.875rem;font-weight:700;color:var(--text-1);
+      line-height:1.25;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .college-info .meta{font-size:.7rem;color:var(--text-3);font-weight:500;}
 
-    /* ── Result header & insight box ── */
-    .result-header {
-      background: #f1f5f9;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: .85rem;
-      margin-bottom: 12px;
-      font-weight: 600;
-      color: var(--text-2);
-    }
-    .insight-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: .82rem;
-      color: #1e40af;
-      margin-bottom: 14px;
-      font-weight: 500;
-      line-height: 1.55;
-    }
+    .best-label{display:inline-block;font-size:.6rem;font-weight:800;
+      color:var(--blue-200);background:rgba(37,99,235,.2);
+      padding:2px 7px;border-radius:4px;margin-bottom:4px;letter-spacing:.06em;}
+    .tier-badge{display:inline-block;font-size:.62rem;font-weight:700;
+      padding:2px 7px;border-radius:4px;
+      background:rgba(100,116,139,.15);color:var(--text-3);
+      border:1px solid rgba(99,130,190,.12);margin-bottom:4px;}
 
-    /* ── Loading UX ── */
-    .loading-box {
-      text-align: center;
-      padding: 2rem 1.25rem;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--r-lg);
-      backdrop-filter: blur(8px);
+    /* right-side metrics */
+    .card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+    .cutoff-num{font-size:.78rem;font-weight:700;color:var(--text-2);letter-spacing:-.01em;}
+    .cutoff-lbl{font-size:.6rem;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+    .badge{
+      display:inline-flex;flex-direction:column;align-items:center;
+      padding:5px 10px;border-radius:20px;
+      font-size:.68rem;font-weight:800;text-transform:uppercase;
+      white-space:nowrap;flex-shrink:0;gap:1px;letter-spacing:.04em;
+      min-width:56px;text-align:center;
     }
-    .loading-box .load-title {
-      font-weight: 700;
-      font-size: .975rem;
-      color: var(--text-1);
-      margin-bottom: 6px;
-    }
-    .loading-box .load-sub {
-      font-size: .8rem;
-      color: var(--text-3);
-    }
-    .load-dots span {
-      display: inline-block;
-      width: 8px; height: 8px;
-      background: var(--blue-500);
-      border-radius: 50%;
-      margin: 12px 3px 0;
-      animation: dot-pulse .9s ease-in-out infinite;
-    }
-    .load-dots span:nth-child(2) { animation-delay: .2s; }
-    .load-dots span:nth-child(3) { animation-delay: .4s; }
-    @keyframes dot-pulse {
-      0%,80%,100% { transform: scale(.7); opacity: .5; }
-      40%          { transform: scale(1);  opacity: 1; }
-    }
+    .badge .pct{font-size:.82rem;font-weight:800;text-transform:none;letter-spacing:-.01em;}
+    .safe    {background:rgba(34,197,94,.14); color:#22c55e; border:1px solid rgba(34,197,94,.3);}
+    .target  {background:rgba(245,158,11,.14);color:#f59e0b; border:1px solid rgba(245,158,11,.3);}
+    .moderate{background:rgba(245,158,11,.14);color:#f59e0b; border:1px solid rgba(245,158,11,.3);}
+    .dream   {background:rgba(239,68,68,.14); color:#ef4444; border:1px solid rgba(239,68,68,.3);}
 
-    /* ── Disclaimer ── */
-    .disclaimer {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: var(--r-sm);
-      padding: .8rem 1rem;
-      font-size: .78rem;
-      color: #92400e;
-      font-weight: 500;
-      line-height: 1.55;
-      margin-top: 1rem;
-    }
+    .bookmark-btn{background:none;border:none;cursor:pointer;font-size:.95rem;
+      padding:3px;color:var(--text-3);transition:color .18s,transform .18s;flex-shrink:0;}
+    .bookmark-btn:hover{color:#f59e0b;transform:scale(1.2);}
+    .bookmark-btn.saved{color:#f59e0b;}
 
-    /* ── Summary strip ── */
-    .summary-strip {
-      display: flex; gap: .5rem; margin-bottom: 1rem;
-    }
-    .summary-pill {
-      flex: 1; text-align: center;
-      border-radius: var(--r-md);
-      padding: .55rem .5rem;
-      font-size: .78rem; font-weight: 700;
-      border: 1px solid;
-    }
-    .summary-pill.safe     { background: var(--safe-bg);     color: var(--safe);     border-color: var(--safe-border); }
-    .summary-pill.moderate { background: var(--moderate-bg); color: var(--moderate); border-color: var(--moderate-border); }
-    .summary-pill.dream    { background: var(--dream-bg);    color: var(--dream);    border-color: var(--dream-border); }
-    .summary-pill .count { display: block; font-size: 1.2rem; font-weight: 800; letter-spacing: -.02em; }
+    /* cutoff bar */
+    .cutoff-bar-wrap{margin-top:5px;}
+    .cutoff-bar-track{height:3px;background:rgba(100,116,139,.2);border-radius:99px;overflow:hidden;margin-top:3px;}
+    .cutoff-bar-fill{height:100%;border-radius:99px;transition:width .6s var(--ease);}
+    .cutoff-bar-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-3);font-weight:600;margin-top:2px;}
 
-    /* ── Imported banner ── */
-    .import-banner {
-      background: linear-gradient(135deg,#eff6ff,#eef2ff);
-      border: 1px solid var(--blue-200);
-      border-radius: var(--r-md);
-      padding: .75rem 1rem;
-      margin-bottom: 1rem;
-      font-size: .85rem;
-      color: #1e40af;
-      font-weight: 600;
-      display: flex; align-items: center; gap: 8px;
-    }
+    /* section titles */
+    .section-title{font-size:.7rem;font-weight:800;margin:14px 0 7px;
+      text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:8px;}
+    .section-title::after{content:'';flex:1;height:1px;background:rgba(99,130,190,.12);}
+    .section-safe{color:#22c55e;}
+    .section-target{color:#f59e0b;}
+    .section-dream{color:#ef4444;}
 
-    /* ── Predict button gradient ── */
-    #predictBtn {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      box-shadow: 0 6px 14px rgba(37,99,235,.3);
-    }
-    #predictBtn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(37,99,235,.38);
-    }
+    /* header + insight */
+    .result-header{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);
+      border-radius:var(--r-sm);padding:8px 12px;font-size:.8rem;margin-bottom:9px;
+      font-weight:600;color:var(--blue-200);}
+    .insight-box{background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.15);
+      padding:9px 12px;border-radius:var(--r-sm);font-size:.78rem;color:var(--blue-200);
+      margin-bottom:10px;font-weight:500;line-height:1.55;}
+
+    /* summary strip */
+    .summary-strip{display:flex;gap:.45rem;margin-bottom:.75rem;}
+    .summary-pill{flex:1;text-align:center;border-radius:var(--r-md);
+      padding:.55rem .3rem;font-size:.68rem;font-weight:700;border:1px solid;}
+    .summary-pill.safe    {background:rgba(34,197,94,.12);   color:#22c55e;border-color:rgba(34,197,94,.3);}
+    .summary-pill.moderate{background:rgba(245,158,11,.12);  color:#f59e0b;border-color:rgba(245,158,11,.3);}
+    .summary-pill.dream   {background:rgba(239,68,68,.12);   color:#ef4444;border-color:rgba(239,68,68,.3);}
+    .summary-pill .count{display:block;font-size:1.1rem;font-weight:800;letter-spacing:-.02em;}
+
+    /* loading */
+    .loading-box{text-align:center;padding:2rem 1.25rem;background:linear-gradient(145deg,#1e293b,#0f172a);
+      border:1px solid var(--border);border-radius:var(--r-lg);}
+    .load-title{font-weight:700;font-size:.95rem;color:var(--text-1);margin-bottom:5px;}
+    .load-sub{font-size:.78rem;color:var(--text-3);}
+    .load-dots span{display:inline-block;width:8px;height:8px;background:var(--primary);
+      border-radius:50%;margin:10px 3px 0;animation:dot-pulse .9s ease-in-out infinite;}
+    .load-dots span:nth-child(2){animation-delay:.2s;}
+    .load-dots span:nth-child(3){animation-delay:.4s;}
+    @keyframes dot-pulse{0%,80%,100%{transform:scale(.65);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+    /* no results */
+    .no-results{text-align:center;padding:2.5rem 1.25rem;color:var(--text-3);
+      font-weight:600;background:linear-gradient(145deg,#1e293b,#0f172a);
+      border-radius:var(--r-md);border:1px dashed rgba(99,130,190,.2);line-height:1.7;}
+
+    .import-banner{background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.28);
+      border-radius:var(--r-md);padding:.65rem .9rem;margin-bottom:.75rem;
+      font-size:.8rem;color:var(--blue-200);font-weight:600;
+      display:flex;align-items:center;gap:8px;}
+    .disclaimer{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.22);
+      border-radius:var(--r-sm);padding:.75rem .9rem;font-size:.73rem;
+      color:#f59e0b;font-weight:500;line-height:1.55;margin-top:.75rem;}
+    .cta-bottom{text-align:center;font-size:.8rem;color:var(--text-3);
+      margin-top:1rem;padding-top:.85rem;border-top:1px dashed rgba(99,130,190,.15);}
+    .cta-bottom a{color:var(--primary);font-weight:700;text-decoration:none;}
+
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.25);
+      border-top-color:white;border-radius:50%;
+      animation:spin .65s linear infinite;display:inline-block;vertical-align:middle;margin-right:4px;}
   </style>
 </head>
 <body>
@@ -211,188 +196,174 @@
 
 <div class="container">
   <h1>College Predictor</h1>
-  <p class="subtitle">Probability-based predictions using KEA 2024 &amp; 2025 cutoff data</p>
+  <p class="subtitle">Probability-based predictions using KEA 2025 cutoff data</p>
 
-  <!-- ── Input form ── -->
+  <!-- Input Card -->
   <div class="form-card" id="form-card">
-    <div class="input-group">
-      <label for="rank">Your Expected KCET Rank</label>
-      <input type="number" id="rank" placeholder="e.g. 12000" min="1" max="300000" inputmode="numeric">
+    <!-- Rank row -->
+    <div class="rank-row">
+      <div class="rank-wrap">
+        <span class="rank-icon">🎯</span>
+        <input type="number" id="rank" placeholder="Enter your rank…" min="1" max="300000" inputmode="numeric">
+      </div>
+      <button class="go-btn" id="predictBtn" onclick="runPrediction()">Analyze →</button>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:.65rem;">
-      <div class="input-group" style="margin-bottom:0;">
-        <label for="branch">Branch</label>
-        <select id="branch">
-          <option value="ALL">All Tech Branches</option>
-          <option value="CSE">CSE</option>
-          <option value="AIML">AI &amp; ML</option>
-          <option value="ISE">ISE</option>
-          <option value="DS">Data Science</option>
-          <option value="ECE">ECE</option>
-          <option value="EEE">EEE</option>
-          <option value="ME">Mechanical</option>
-          <option value="CV">Civil</option>
-          <option value="Chemical">Chemical</option>
-          <option value="Biotech">Biotechnology</option>
-        </select>
-      </div>
-      <div class="input-group" style="margin-bottom:0;">
-        <label for="category">Category</label>
-        <select id="category">
-          <option value="GM" selected>GM</option>
-          <option value="2A">2A</option>
-          <option value="2B">2B</option>
-          <option value="3A">3A</option>
-          <option value="3B">3B</option>
-          <option value="SC">SC</option>
-          <option value="ST">ST</option>
-        </select>
-      </div>
+    <!-- Branch tabs -->
+    <div class="branch-tab-row" id="branchTabs">
+      <button class="btab active" onclick="setBranch('ALL',this)">All</button>
+      <button class="btab" onclick="setBranch('CSE',this)">CSE</button>
+      <button class="btab" onclick="setBranch('AIML',this)">AIML</button>
+      <button class="btab" onclick="setBranch('ISE',this)">ISE</button>
+      <button class="btab" onclick="setBranch('DS',this)">Data Sci</button>
+      <button class="btab" onclick="setBranch('ECE',this)">ECE</button>
+      <button class="btab" onclick="setBranch('EEE',this)">EEE</button>
+      <button class="btab" onclick="setBranch('ME',this)">Mech</button>
+      <button class="btab" onclick="setBranch('CV',this)">Civil</button>
     </div>
 
-    <button class="btn-primary" id="predictBtn" onclick="runPrediction()" style="margin-top:1rem;">
-      Analyze My Chances →
-    </button>
+    <!-- Category -->
+    <div class="cat-row">
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="GM" selected>GM (General)</option>
+        <option value="2A">OBC 2A</option>
+        <option value="2B">OBC 2B</option>
+        <option value="3A">OBC 3A</option>
+        <option value="3B">OBC 3B</option>
+        <option value="SC">SC</option>
+        <option value="ST">ST</option>
+      </select>
+    </div>
   </div>
 
-  <!-- ── Loading state ── -->
-  <div id="loading" style="display:none; margin-top:1.25rem;">
+  <!-- Loading -->
+  <div id="loading" style="display:none;margin-top:1rem;">
     <div class="loading-box">
       <div class="load-title">Analyzing your chances…</div>
-      <div class="load-sub">Matching cutoff trends • Calculating probabilities</div>
+      <div class="load-sub">Matching cutoffs • Calculating probabilities</div>
       <div class="load-dots"><span></span><span></span><span></span></div>
     </div>
   </div>
 
-  <!-- ── Results injected here ── -->
+  <!-- Results injected here -->
   <div id="results-container"></div>
 </div>
 
-<footer style="background:#0f172a;color:#94a3b8;padding:2rem 1.5rem;">
-  <div class="footer-grid">
-    <div><strong style="color:white;display:block;margin-bottom:8px;">StudentHub</strong>Honest, free tools for Karnataka KCET aspirants. Not affiliated with KEA.</div>
-    <div>
-      <strong style="color:white;display:block;margin-bottom:8px;">Tools</strong>
-      <ul style="list-style:none;padding:0;">
-        <li style="margin-bottom:6px;"><a href="predictor.html" style="color:#64748b;text-decoration:none;">College Predictor</a></li>
-        <li style="margin-bottom:6px;"><a href="cutoffs.html" style="color:#64748b;text-decoration:none;">Cutoff Explorer</a></li>
-        <li style="margin-bottom:6px;"><a href="marks-to-rank.html" style="color:#64748b;text-decoration:none;">Marks to Rank</a></li>
-        <li style="margin-bottom:6px;"><a href="kcet-cutoff-2025.html" style="color:#64748b;text-decoration:none;">KCET Cutoff 2025</a></li>
-      </ul>
-    </div>
-    <div>
-      <strong style="color:white;display:block;margin-bottom:8px;">Info</strong>
-      <ul style="list-style:none;padding:0;">
-        <li style="margin-bottom:6px;"><a href="about.html" style="color:#64748b;text-decoration:none;">About StudentHub</a></li>
-        <li style="margin-bottom:6px;"><a href="https://kea.kar.nic.in" target="_blank" rel="noopener noreferrer" style="color:#64748b;text-decoration:none;">Official KEA</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom" style="max-width:680px;margin:0 auto;">© 2026 StudentHub • Independent student-built tool • Not affiliated with KEA</div>
-</footer>
-
+<!-- Bottom Nav -->
 <div class="bottom-nav-container">
   <nav class="bottom-nav">
-    <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
-    <a href="predictor.html" class="nav-item active"><span class="nav-icon">🎯</span><span>Predictor</span></a>
-    <a href="cutoffs.html" class="nav-item"><span class="nav-icon">📊</span><span>Cutoffs</span></a>
-    <a href="marks-to-rank.html" class="nav-item"><span class="nav-icon">📝</span><span>Marks→Rank</span></a>
+    <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="predictor.html" class="nav-item active"><span class="nav-icon">🎯</span>Predictor</a>
+    <a href="cutoffs.html" class="nav-item"><span class="nav-icon">📋</span>Cutoffs</a>
+    <a href="marks-to-rank.html" class="nav-item"><span class="nav-icon">📐</span>Tools</a>
   </nav>
 </div>
 
 <script src="final_colleges.js"></script>
 <script>
-  /* ════════════════════════════════════
-     BOOKMARKS (session only)
-  ════════════════════════════════════ */
+  /* ── Selected branch ── */
+  let selectedBranch = 'ALL';
+  function setBranch(val, el) {
+    selectedBranch = val;
+    document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── Auto-set branch from URL ── */
+  (function() {
+    const p = new URLSearchParams(window.location.search).get('branch');
+    if (p) {
+      selectedBranch = p.toUpperCase();
+      document.querySelectorAll('.btab').forEach(b => {
+        if (b.textContent.trim() === selectedBranch ||
+            b.getAttribute('onclick').includes(`'${selectedBranch}'`)) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+    }
+  })();
+
+  /* ── Probability engine ── */
   const bookmarks = new Set();
 
-  /* ════════════════════════════════════
-     PROBABILITY ENGINE
-  ════════════════════════════════════ */
   function calcProbability(rank, cutoff) {
     if (!cutoff || cutoff <= 0) return 0;
-    const ratio = rank / cutoff;
-    if (ratio <= 0.6)  return 90;
-    if (ratio <= 0.8)  return 75;
-    if (ratio <= 1.0)  return 55;
-    if (ratio <= 1.2)  return 35;
-    if (ratio <= 1.4)  return 20;
+    const r = rank / cutoff;
+    if (r <= 0.6) return 90;
+    if (r <= 0.8) return 75;
+    if (r <= 1.0) return 55;
+    if (r <= 1.2) return 35;
+    if (r <= 1.4) return 20;
     return 10;
   }
 
   function getCat(chance) {
-    if (chance >= 70) return { label:'SAFE',     css:'safe',     emoji:'🟢' };
-    if (chance >= 40) return { label:'MODERATE', css:'moderate', emoji:'🟡' };
-    return               { label:'DREAM',    css:'dream',    emoji:'🔴' };
+    if (chance >= 70) return { label:'SAFE',    css:'safe'    };
+    if (chance >= 40) return { label:'TARGET',  css:'target'  };
+    return               { label:'DREAM',   css:'dream'   };
   }
 
-  /* ════════════════════════════════════
-     CUTOFF BAR HTML
-  ════════════════════════════════════ */
+  /* ── Cutoff bar ── */
   function cutoffBar(rank, cutoff, css) {
     const pct = Math.min(100, Math.round((rank / cutoff) * 100));
-    const colors = { safe:'#22c55e', moderate:'#f59e0b', dream:'#ef4444' };
-    return `
-      <div class="cutoff-bar-wrap">
-        <div class="cutoff-bar-track">
-          <div class="cutoff-bar-fill" style="width:${pct}%;background:${colors[css]||'#94a3b8'}"></div>
-        </div>
-        <div class="cutoff-bar-labels">
-          <span>Your rank: ${rank.toLocaleString()}</span>
-          <span>Cutoff: ${cutoff.toLocaleString()}</span>
-        </div>
-      </div>`;
+    const cols = { safe:'#22c55e', target:'#f59e0b', moderate:'#f59e0b', dream:'#ef4444' };
+    return `<div class="cutoff-bar-wrap">
+      <div class="cutoff-bar-track">
+        <div class="cutoff-bar-fill" style="width:${pct}%;background:${cols[css]||'#94a3b8'}"></div>
+      </div>
+      <div class="cutoff-bar-labels">
+        <span>Rank ${rank.toLocaleString('en-IN')}</span>
+        <span>Cutoff ${cutoff.toLocaleString('en-IN')}</span>
+      </div>
+    </div>`;
   }
 
-  /* ════════════════════════════════════
-     RENDER HELPERS
-  ════════════════════════════════════ */
-  function renderCard(item, i, rank, groupIndex) {
-    const isBest = groupIndex === 0 && i === 0;
-    const cardClass = isBest ? 'result-card best' : 'result-card';
+  /* ── Render card ── */
+  function renderCard(item, isBest, rank) {
     const bkSaved = bookmarks.has(item.name + item.branch) ? 'saved' : '';
-    const badgeCss = item.chance >= 70 ? 'safe' : item.chance >= 40 ? 'target' : 'dream';
-
     return `
-      <div class="${cardClass}">
+      <div class="result-card ${isBest ? 'best' : ''}">
         <div class="college-info">
-          ${isBest ? '<div style="font-size:10px;color:#2563eb;font-weight:800;margin-bottom:3px;">⭐ BEST MATCH</div>' : ''}
-          <div class="tier-badge">${item.tierLabel || '📍 Tier 5'}</div>
+          ${isBest ? '<div class="best-label">⭐ BEST MATCH</div>' : ''}
+          <div class="tier-badge">${item.tierLabel || '📍 College'}</div>
           <h3>${item.name}</h3>
-          <div class="meta">
-            ${item.branch} • Cutoff: ${item.categoryCutoff.toLocaleString()}
-          </div>
+          <div class="meta">${item.branch}</div>
           ${cutoffBar(rank, item.categoryCutoff, item.css)}
         </div>
-        <button class="bookmark-btn ${bkSaved}"
-          onclick="toggleBookmark('${item.name}','${item.branch}',this)" title="Save">🔖</button>
-        <div class="badge ${badgeCss}">${item.chance}%</div>
+        <div class="card-right">
+          <div>
+            <div class="cutoff-num">${item.categoryCutoff.toLocaleString('en-IN')}</div>
+            <div class="cutoff-lbl">Cutoff</div>
+          </div>
+          <div class="badge ${item.css}">
+            <span class="pct">${item.chance}%</span>
+            <span>${item.label}</span>
+          </div>
+          <button class="bookmark-btn ${bkSaved}"
+            onclick="toggleBookmark('${item.name}','${item.branch}',this)" title="Save">🔖</button>
+        </div>
       </div>`;
   }
 
-  function buildSection(titleHtml, cssClass, data, rank) {
+  function buildSection(title, cssClass, data, rank, isFirst) {
     if (!data.length) return '';
-    return `<div class="section-title ${cssClass}">${titleHtml}</div>`
-      + data.map((c, i) => renderCard(c, i, rank, i)).join('');
+    return `<div class="section-title ${cssClass}">${title}</div>`
+      + data.map((c, i) => renderCard(c, isFirst && i === 0, rank)).join('');
   }
 
-  function renderResults(results, rank, branchChoice, catChoice) {
-    const container = document.getElementById('results-container');
+  function renderResults(results, rank, branchLabel, catChoice) {
+    const c = document.getElementById('results-container');
     if (!results.length) {
-      container.innerHTML = `
-        <div class="no-results">
-          😔 No colleges found for rank <b>${rank.toLocaleString()}</b>.<br>
-          <small>Try "All Tech Branches" or verify your rank range.</small>
-        </div>`;
+      c.innerHTML = `<div class="no-results">😔 No colleges found for rank <b>${rank.toLocaleString('en-IN')}</b>.<br><small>Try "All" branch or a different category.</small></div>`;
       return;
     }
-
-    const safe     = results.filter(r => r.chance >= 70);
-    const target   = results.filter(r => r.chance >= 40 && r.chance < 70);
-    const dream    = results.filter(r => r.chance < 40);
-    const best     = results[0];
+    const safe   = results.filter(r => r.chance >= 70);
+    const target = results.filter(r => r.chance >= 40 && r.chance < 70);
+    const dream  = results.filter(r => r.chance < 40);
+    const best   = results[0];
 
     let html = `
       <div class="summary-strip">
@@ -400,129 +371,100 @@
         <div class="summary-pill moderate"><span class="count">${target.length}</span>Target</div>
         <div class="summary-pill dream"><span class="count">${dream.length}</span>Dream</div>
       </div>
-
       <div class="result-header">
-        🎯 Rank <b>${rank.toLocaleString()}</b> &nbsp;•&nbsp;
-        ${branchChoice === 'ALL' ? 'All Branches' : branchChoice} &nbsp;•&nbsp; ${catChoice}
+        🎯 Rank <b>${rank.toLocaleString('en-IN')}</b> &nbsp;•&nbsp; ${branchLabel} &nbsp;•&nbsp; ${catChoice}
       </div>
-
       <div class="insight-box">
-        💡 Best chance: <b>${best.name} (${best.branch})</b><br>
-        Most realistic cutoff range: <b>${Math.round(best.categoryCutoff * 0.9).toLocaleString()} – ${best.categoryCutoff.toLocaleString()}</b>
+        💡 Best pick: <b>${best.name} (${best.branch})</b><br>
+        Realistic cutoff range: <b>${Math.round(best.categoryCutoff*0.9).toLocaleString('en-IN')} – ${best.categoryCutoff.toLocaleString('en-IN')}</b>
       </div>`;
 
-    html += buildSection('🟢 SAFE OPTIONS',   'section-safe',   safe,   rank);
-    html += buildSection('🟡 TARGET OPTIONS', 'section-target', target, rank);
-    html += buildSection('🔴 DREAM OPTIONS',  'section-dream',  dream,  rank);
+    html += buildSection('🟢 SAFE OPTIONS',   'section-safe',   safe,   rank, true);
+    html += buildSection('🟡 TARGET OPTIONS', 'section-target', target, rank, false);
+    html += buildSection('🔴 DREAM OPTIONS',  'section-dream',  dream,  rank, false);
 
     html += `
-      <div class="disclaimer">
-        ⚠️ These are probability-based estimates using previous year data.
-        Actual allotment may vary depending on seat matrix and demand.
-      </div>
-      <div class="cta-bottom" style="margin-top:.75rem;">
-        📋 Explore all cutoffs by category → <a href="cutoffs.html">Cutoffs Tab</a>
-      </div>`;
+      <div class="disclaimer">⚠️ Probability estimates based on previous year data. Actual cutoffs may vary with 2026 seat matrix &amp; demand.</div>
+      <div class="cta-bottom">📋 Explore cutoffs → <a href="cutoffs.html">Cutoffs Tab</a></div>`;
 
-    container.innerHTML = html;
-    setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    c.innerHTML = html;
+    setTimeout(() => c.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
   }
 
-  /* ════════════════════════════════════
-     MAIN PREDICTION
-  ════════════════════════════════════ */
+  /* ── Main prediction ── */
   function runPrediction() {
-    const rankInput    = document.getElementById('rank');
-    const branchChoice = document.getElementById('branch').value;
-    const catChoice    = document.getElementById('category').value;
-    const container    = document.getElementById('results-container');
-    const loading      = document.getElementById('loading');
-    const btn          = document.getElementById('predictBtn');
-
-    const rank = parseInt(rankInput.value);
+    const rankEl   = document.getElementById('rank');
+    const catEl    = document.getElementById('category');
+    const c        = document.getElementById('results-container');
+    const loading  = document.getElementById('loading');
+    const btn      = document.getElementById('predictBtn');
+    const rank     = parseInt(rankEl.value);
+    const catChoice = catEl.value;
 
     if (!rank || rank <= 0 || rank > 300000) {
-      rankInput.classList.add('error');
-      container.innerHTML = `<div class="no-results">⚠️ Please enter a valid KCET rank (1–3,00,000).</div>`;
+      rankEl.classList.add('error');
+      c.innerHTML = `<div class="no-results">⚠️ Enter a valid KCET rank (1 – 3,00,000).</div>`;
       return;
     }
-    rankInput.classList.remove('error');
+    rankEl.classList.remove('error');
 
-    // Loading state
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Analyzing…';
-    container.innerHTML = '';
-    loading.style.display = 'block';
+    btn.innerHTML = '<span class="spinner"></span>Analyzing…';
+    c.innerHTML = ''; loading.style.display = 'block';
+
+    const branchLabel = selectedBranch === 'ALL' ? 'All Branches' : selectedBranch;
 
     setTimeout(() => {
       const results = collegeData
-        .map(c => {
-          const catCutoff = catChoice === 'GM' ? c.cutoff : (c[catChoice] || 0);
+        .map(col => {
+          const catCutoff = catChoice === 'GM' ? col.cutoff : (col[catChoice] || 0);
           const adjCutoff = catCutoff ? Math.floor(catCutoff * 1.1) : 0;
-          return { ...c, categoryCutoff: catCutoff, adjCutoff };
+          return { ...col, categoryCutoff: catCutoff, adjCutoff };
         })
-        .filter(c => {
-          if (!c.adjCutoff) return false;
-          const branchOk = branchChoice === 'ALL' || c.branch === branchChoice;
-          return branchOk && rank <= c.adjCutoff * 1.4;
+        .filter(col => {
+          if (!col.adjCutoff) return false;
+          const branchOk = selectedBranch === 'ALL' || col.branch === selectedBranch;
+          return branchOk && rank <= col.adjCutoff * 1.4;
         })
-        .map(c => {
-          const chance = calcProbability(rank, c.categoryCutoff);
-          const cat = getCat(chance);
-          return { ...c, chance, ...cat };
+        .map(col => {
+          const chance = calcProbability(rank, col.categoryCutoff);
+          return { ...col, chance, ...getCat(chance) };
         })
-        .filter(c => c.chance > 0)
+        .filter(col => col.chance > 0)
         .sort((a, b) => b.chance - a.chance)
         .slice(0, 18);
 
       loading.style.display = 'none';
-      renderResults(results, rank, branchChoice, catChoice);
-
+      renderResults(results, rank, branchLabel, catChoice);
       btn.disabled = false;
-      btn.innerHTML = 'Analyze My Chances →';
+      btn.innerHTML = 'Analyze →';
     }, 1000);
   }
 
-  /* ════════════════════════════════════
-     BOOKMARKS
-  ════════════════════════════════════ */
+  /* ── Bookmarks ── */
   function toggleBookmark(name, branch, btn) {
     const key = name + branch;
-    if (bookmarks.has(key)) {
-      bookmarks.delete(key);
-      btn.classList.remove('saved');
-      btn.style.color = '';
-    } else {
-      bookmarks.add(key);
-      btn.classList.add('saved');
-      btn.style.color = '#f59e0b';
-    }
+    if (bookmarks.has(key)) { bookmarks.delete(key); btn.classList.remove('saved'); }
+    else { bookmarks.add(key); btn.classList.add('saved'); }
   }
 
-  /* ════════════════════════════════════
-     URL PARAM AUTO-FILL
-  ════════════════════════════════════ */
+  /* ── URL params auto-fill ── */
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('rank').addEventListener('keydown', e => {
       if (e.key === 'Enter') runPrediction();
     });
-
     const params = new URLSearchParams(window.location.search);
     const urlRank = params.get('rank');
     if (urlRank && !isNaN(parseInt(urlRank))) {
-      const rankField = document.getElementById('rank');
-      rankField.value = parseInt(urlRank);
-
-      // Show import banner
+      document.getElementById('rank').value = parseInt(urlRank);
       const banner = document.createElement('div');
       banner.className = 'import-banner';
-      banner.innerHTML = `🔢 Rank <strong>~${parseInt(urlRank).toLocaleString('en-IN')}</strong> imported from Marks-to-Rank predictor`;
-      document.getElementById('form-card').insertBefore(banner, document.getElementById('form-card').firstChild);
-
+      banner.innerHTML = `🔢 Rank <strong>~${parseInt(urlRank).toLocaleString('en-IN')}</strong> imported from Marks → Rank tool`;
+      const fc = document.getElementById('form-card');
+      fc.insertBefore(banner, fc.firstChild);
       setTimeout(() => runPrediction(), 350);
     }
   });
 </script>
-
 </body>
 </html>
