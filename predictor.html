@@ -227,6 +227,7 @@
       <label for="category">Category</label>
       <select id="category">
         <option value="GM" selected>GM (General)</option>
+        <option value="1G">Category 1 (1G)</option>
         <option value="2A">OBC 2A</option>
         <option value="2B">OBC 2B</option>
         <option value="3A">OBC 3A</option>
@@ -291,19 +292,33 @@
 
   function calcProbability(rank, cutoff) {
     if (!cutoff || cutoff <= 0) return 0;
-    const r = rank / cutoff;
-    if (r <= 0.6) return 90;
-    if (r <= 0.8) return 75;
-    if (r <= 1.0) return 55;
-    if (r <= 1.2) return 35;
-    if (r <= 1.4) return 20;
-    return 10;
+    const ratio = rank / cutoff;
+    let chance;
+    if (ratio <= 1) {
+      chance = 95 - (ratio * 45);   // range ~50% to 95%
+    } else {
+      chance = Math.max(10, 50 - ((ratio - 1) * 60));  // sharp drop
+    }
+    // Clamp between 10 and 95
+    return Math.min(95, Math.max(10, Math.round(chance)));
+  }
+
+  /* ── Compute tier from minimum GM cutoff of the college (done at runtime) ── */
+  function computeTier(collegeName) {
+    const collegeEntries = collegeData.filter(c => c.name === collegeName && c.cutoff > 0);
+    if (collegeEntries.length === 0) return { tier: 5, tierLabel: '📍 Tier 5' };
+    const minCutoff = Math.min(...collegeEntries.map(c => c.cutoff));
+    if (minCutoff < 5000)            return { tier: 1, tierLabel: '🏆 Tier 1' };
+    if (minCutoff < 15000)           return { tier: 2, tierLabel: '⭐ Tier 2' };
+    if (minCutoff < 30000)           return { tier: 3, tierLabel: '✅ Tier 3' };
+    if (minCutoff < 60000)           return { tier: 4, tierLabel: '📊 Tier 4' };
+    return                           { tier: 5, tierLabel: '📍 Tier 5' };
   }
 
   function getCat(chance) {
-    if (chance >= 70) return { label:'SAFE',    css:'safe'    };
-    if (chance >= 40) return { label:'TARGET',  css:'target'  };
-    return               { label:'DREAM',   css:'dream'   };
+    if (chance >= 70) return { label:'SAFE',     css:'safe'     };
+    if (chance >= 40) return { label:'MODERATE', css:'moderate' };
+    return                   { label:'DREAM',    css:'dream'    };
   }
 
   /* ── Cutoff bar ── */
@@ -360,28 +375,36 @@
       c.innerHTML = `<div class="no-results">😔 No colleges found for rank <b>${rank.toLocaleString('en-IN')}</b>.<br><small>Try "All" branch or a different category.</small></div>`;
       return;
     }
-    const safe   = results.filter(r => r.chance >= 70);
-    const target = results.filter(r => r.chance >= 40 && r.chance < 70);
-    const dream  = results.filter(r => r.chance < 40);
-    const best   = results[0];
+    // Count by category for summary strip
+    const safeAll     = results.filter(r => r.chance >= 70);
+    const moderateAll = results.filter(r => r.chance >= 40 && r.chance < 70);
+    const dreamAll    = results.filter(r => r.chance < 40);
+
+    // Best pick = first in the sorted display order (moderate first)
+    const best = results[0];
 
     let html = `
       <div class="summary-strip">
-        <div class="summary-pill safe"><span class="count">${safe.length}</span>Safe</div>
-        <div class="summary-pill moderate"><span class="count">${target.length}</span>Target</div>
-        <div class="summary-pill dream"><span class="count">${dream.length}</span>Dream</div>
+        <div class="summary-pill moderate"><span class="count">${moderateAll.length}</span>Moderate</div>
+        <div class="summary-pill dream"><span class="count">${dreamAll.length}</span>Dream</div>
+        <div class="summary-pill safe"><span class="count">${safeAll.length}</span>Safe</div>
       </div>
       <div class="result-header">
         🎯 Rank <b>${rank.toLocaleString('en-IN')}</b> &nbsp;•&nbsp; ${branchLabel} &nbsp;•&nbsp; ${catChoice}
       </div>
       <div class="insight-box">
-        💡 Best pick: <b>${best.name} (${best.branch})</b><br>
-        Realistic cutoff range: <b>${Math.round(best.categoryCutoff*0.9).toLocaleString('en-IN')} – ${best.categoryCutoff.toLocaleString('en-IN')}</b>
+        💡 Top result: <b>${best.name} (${best.branch})</b><br>
+        Cutoff range: <b>${Math.round(best.categoryCutoff*0.9).toLocaleString('en-IN')} – ${best.categoryCutoff.toLocaleString('en-IN')}</b>
       </div>`;
 
-    html += buildSection('🟢 SAFE OPTIONS',   'section-safe',   safe,   rank, true);
-    html += buildSection('🟡 TARGET OPTIONS', 'section-target', target, rank, false);
-    html += buildSection('🔴 DREAM OPTIONS',  'section-dream',  dream,  rank, false);
+    // Sorting: MODERATE first, DREAM second, SAFE last — ascending chance within each group
+    const moderate = results.filter(r => r.chance >= 40 && r.chance < 70).sort((a,b) => a.chance - b.chance);
+    const dream    = results.filter(r => r.chance < 40).sort((a,b) => a.chance - b.chance);
+    const safe     = results.filter(r => r.chance >= 70).sort((a,b) => a.chance - b.chance);
+
+    html += buildSection('🟡 MODERATE OPTIONS', 'section-target', moderate, rank, true);
+    html += buildSection('🔴 DREAM OPTIONS',    'section-dream',  dream,    rank, false);
+    html += buildSection('🟢 SAFE OPTIONS',     'section-safe',   safe,     rank, false);
 
     html += `
       <div class="disclaimer">⚠️ Probability estimates based on previous year data. Actual cutoffs may vary with 2026 seat matrix &amp; demand.</div>
@@ -415,27 +438,29 @@
     const branchLabel = selectedBranch === 'ALL' ? 'All Branches' : selectedBranch;
 
     setTimeout(() => {
-      const results = collegeData
+      // Build all scored results
+      const allScored = collegeData
         .map(col => {
-          const catCutoff = catChoice === 'GM' ? col.cutoff : (col[catChoice] || 0);
-          const adjCutoff = catCutoff ? Math.floor(catCutoff * 1.1) : 0;
-          return { ...col, categoryCutoff: catCutoff, adjCutoff };
-        })
-        .filter(col => {
-          if (!col.adjCutoff) return false;
+          let catCutoff = catChoice === 'GM' ? col.cutoff : (col[catChoice] || 0);
+          if (!catCutoff || catCutoff <= 0) catCutoff = col.cutoff; // Fallback to GM if missing
+          if (!catCutoff) return null;
           const branchOk = selectedBranch === 'ALL' || col.branch === selectedBranch;
-          return branchOk && rank <= col.adjCutoff * 1.4;
+          if (!branchOk) return null;
+          const chance = calcProbability(rank, catCutoff);
+          if (chance < 10) return null;          // filter out useless results
+          const tierInfo = computeTier(col.name); // dynamic tier from GM CSE
+          return { ...col, categoryCutoff: catCutoff, chance, tierLabel: tierInfo.tierLabel, ...getCat(chance) };
         })
-        .map(col => {
-          const chance = calcProbability(rank, col.categoryCutoff);
-          return { ...col, chance, ...getCat(chance) };
-        })
-        .filter(col => col.chance > 0)
-        .sort((a, b) => b.chance - a.chance)
-        .slice(0, 18);
+        .filter(Boolean);
+
+      // Sort: MODERATE first → DREAM → SAFE; ascending chance within each group
+      const moderate = allScored.filter(r => r.chance >= 40 && r.chance < 70).sort((a,b) => a.chance - b.chance);
+      const dream    = allScored.filter(r => r.chance < 40).sort((a,b) => a.chance - b.chance);
+      const safe     = allScored.filter(r => r.chance >= 70).sort((a,b) => a.chance - b.chance);
+      const sorted   = [...moderate, ...dream, ...safe].slice(0, 10);
 
       loading.style.display = 'none';
-      renderResults(results, rank, branchLabel, catChoice);
+      renderResults(sorted, rank, branchLabel, catChoice);
       btn.disabled = false;
       btn.innerHTML = 'Analyze →';
     }, 1000);
