@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KCET Marks to Rank Predictor 2026 | StudentHub</title>
   <meta name="description" content="Free KCET 2026 marks to rank predictor using KEA's official 50:50 composite formula. Precise rank from your KCET PCM and board PCM scores.">
@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* â”€â”€ Subject card grid â”€â”€ */
+    /* ── Subject card grid ── */
     .subject-section-label{
       font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
       color:var(--text-3);margin:1rem 0 .5rem;display:flex;align-items:center;gap:8px;
@@ -36,11 +36,11 @@
       width:100%;border:none;background:transparent;color:var(--text-1);
       font-size:1.2rem;font-weight:800;font-family:inherit;text-align:center;outline:none;
       -moz-appearance:textfield;
+      appearance:textfield;
     }
     .s-input::-webkit-inner-spin-button,.s-input::-webkit-outer-spin-button{-webkit-appearance:none;}
     .s-input.error{color:#ef4444;}
     .s-max{font-size:.58rem;font-weight:600;color:rgba(100,116,139,.55);}
-
     /* Live total bar */
     .total-bar{
       display:flex;align-items:center;justify-content:space-between;
@@ -104,8 +104,8 @@
 </header>
 
 <div class="container">
-  <h1>Marks â†’ Rank</h1>
-  <p class="subtitle">KEA official 50:50 composite formula Â· Enter your subject scores below</p>
+  <h1>Marks → Rank</h1>
+  <p class="subtitle">KEA official 50:50 composite formula · Enter your subject scores below</p>
 
   <!-- Input Card -->
   <div class="form-card" id="input-card">
@@ -113,11 +113,11 @@
     <!-- Formula info -->
     <div style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.18);border-radius:var(--r-sm);padding:.6rem .85rem;font-size:.75rem;color:var(--blue-200);font-weight:500;margin-bottom:.85rem;line-height:1.5;">
       <strong style="display:block;margin-bottom:2px;">Formula</strong>
-      Composite = (KCET PCM / 180) Ã— 50 + (Board PCM / 300) Ã— 50
+      Composite = (KCET PCM / 180) × 50 + (Board PCM / 300) × 50
     </div>
 
     <!-- KCET Marks row -->
-    <div class="subject-section-label">ðŸŽ¯ KCET Exam Marks</div>
+    <div class="subject-section-label">🎯 KCET Exam Marks</div>
     <div class="subject-grid">
       <div class="subject-card" id="card-kPhy">
         <div class="s-label">Physics</div>
@@ -141,7 +141,7 @@
     </div>
 
     <!-- Board Marks row -->
-    <div class="subject-section-label">ðŸ“‹ Board Exam Marks</div>
+    <div class="subject-section-label">📋 Board Exam Marks</div>
     <div class="subject-grid">
       <div class="subject-card" id="card-bPhy">
         <div class="s-label">Physics Board</div>
@@ -170,7 +170,7 @@
       <span class="val" style="color:#a5b4fc;"><span id="composite-live">0.00</span> / 100</span>
     </div>
 
-    <button class="btn-primary" id="calc-btn" onclick="calculate()" style="width:100%;margin-top:.3rem;">Calculate Rank â†’</button>
+    <button class="btn-primary" id="calc-btn" onclick="calculate()" style="width:100%;margin-top:.3rem;">Calculate Rank →</button>
   </div>
 
   <!-- Result Panel -->
@@ -179,7 +179,7 @@
       <div class="result-hero">
         <div class="result-eyebrow">Estimated KCET Rank</div>
         <div class="result-rank-num"><span class="tilde">~</span><span id="res-rank">0</span></div>
-        <div class="result-subtitle">Single interpolated estimate Â· Not a range</div>
+        <div class="result-subtitle">Single interpolated estimate · Not a range</div>
         <div class="result-band" id="res-band"></div>
       </div>
       <div class="score-pills">
@@ -203,7 +203,7 @@
       </div>
       <div class="funnel-area">
         <p>Find colleges that match your estimated rank</p>
-        <a id="funnel-btn" href="predictor.html" class="btn-funnel">ðŸŽ¯ Find Colleges for this Rank</a>
+        <a id="funnel-btn" href="predictor.html" class="btn-funnel">🎯 Find Colleges for this Rank</a>
       </div>
     </div>
     <div style="margin-top:.75rem;text-align:center;">
@@ -216,19 +216,15 @@
 <!-- Bottom Nav -->
 <div class="bottom-nav-container">
   <nav class="bottom-nav">
-    <a href="index.html" class="nav-item"><span class="nav-icon">ðŸ </span>Home</a>
-    <a href="predictor.html" class="nav-item"><span class="nav-icon">ðŸŽ¯</span>Predictor</a>
-    <a href="cutoffs.html" class="nav-item"><span class="nav-icon">ðŸ“‹</span>Cutoffs</a>
-    <a href="marks-to-rank.html" class="nav-item active"><span class="nav-icon">ðŸ“</span>Tools</a>
-
-    <a href="about.html" class="nav-item">
-      <span class="nav-icon">ℹ️</span>About
-    </a>
+    <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="predictor.html" class="nav-item"><span class="nav-icon">🎯</span>Predictor</a>
+    <a href="cutoffs.html" class="nav-item"><span class="nav-icon">📊</span>Cutoffs</a>
+    <a href="marks-to-rank.html" class="nav-item active"><span class="nav-icon">📏</span>Marks-to-Rank</a>
   </nav>
 </div>
 
 <script>
-/* â”€â”€ Rank engine â”€â”€ */
+/* ── Rank engine ── */
 const BANDS=[
   {min:95,max:100,rMin:1,rMax:500},{min:90,max:95,rMin:500,rMax:1500},
   {min:85,max:90,rMin:1500,rMax:3000},{min:80,max:85,rMin:3000,rMax:6000},
@@ -244,15 +240,15 @@ function interpolateRank(s){
 }
 function calcComposite(kcet,board){return((board/300)*50)+((kcet/180)*50);}
 function getBand(r){
-  if(r<=1000) return{label:'ðŸ† Top 1,000 â€” Elite',bg:'rgba(34,197,94,.2)',color:'#22c55e'};
-  if(r<=5000) return{label:'â­ Top 5,000 â€” Excellent',bg:'rgba(37,99,235,.2)',color:'#93c5fd'};
-  if(r<=15000)return{label:'âœ… Top 15,000 â€” Good',bg:'rgba(139,92,246,.2)',color:'#c4b5fd'};
-  if(r<=40000)return{label:'ðŸ“Š Top 40,000 â€” Average',bg:'rgba(245,158,11,.15)',color:'#fbbf24'};
-  if(r<=80000)return{label:'ðŸ“ˆ Top 80,000 â€” Below Avg',bg:'rgba(249,115,22,.15)',color:'#fb923c'};
-  return{label:'ðŸ”„ Consider other options',bg:'rgba(239,68,68,.15)',color:'#f87171'};
+  if(r<=1000) return{label:'🏆 Top 1,000 — Elite',bg:'rgba(34,197,94,.2)',color:'#22c55e'};
+  if(r<=5000) return{label:'⭐ Top 5,000 — Excellent',bg:'rgba(37,99,235,.2)',color:'#93c5fd'};
+  if(r<=15000)return{label:'✅ Top 15,000 — Good',bg:'rgba(139,92,246,.2)',color:'#c4b5fd'};
+  if(r<=40000)return{label:'📊 Top 40,000 — Average',bg:'rgba(245,158,11,.15)',color:'#fbbf24'};
+  if(r<=80000)return{label:'📈 Top 80,000 — Below Avg',bg:'rgba(249,115,22,.15)',color:'#fb923c'};
+  return{label:'🔄 Consider other options',bg:'rgba(239,68,68,.15)',color:'#f87171'};
 }
 
-/* â”€â”€ Live update â”€â”€ */
+/* ── Live update ── */
 function getVal(id){return Math.max(0,parseFloat(document.getElementById(id).value)||0);}
 
 function onInput(){
@@ -264,7 +260,7 @@ function onInput(){
   document.getElementById('composite-live').textContent=comp.toFixed(2);
 }
 
-/* â”€â”€ Validation â”€â”€ */
+/* ── Validation ── */
 function validate(){
   const fields=[
     {id:'kPhy',max:60},{id:'kChe',max:60},{id:'kMat',max:60},
@@ -282,7 +278,7 @@ function validate(){
   return ok;
 }
 
-/* â”€â”€ Calculate â”€â”€ */
+/* ── Calculate ── */
 function calculate(){
   if(!validate())return;
   const btn=document.getElementById('calc-btn');
@@ -299,14 +295,14 @@ function calculate(){
     bEl.textContent=band.label;bEl.style.background=band.bg;bEl.style.color=band.color;
     document.getElementById('res-meter').style.width=Math.min(100,Math.round((rank/130000)*100))+'%';
     document.getElementById('funnel-btn').href=`predictor.html?rank=${rank}`;
-    btn.disabled=false;btn.innerHTML='Calculate Rank â†’';
+    btn.disabled=false;btn.innerHTML='Calculate Rank →';
     document.getElementById('input-card').style.display='none';
     document.getElementById('result-panel').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
   },500);
 }
 
-/* â”€â”€ Reset â”€â”€ */
+/* ── Reset ── */
 function resetAll(){
   ['kPhy','kChe','kMat','bPhy','bChe','bMat'].forEach(id=>{
     document.getElementById(id).value='';
