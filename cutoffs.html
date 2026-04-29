@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -29,37 +29,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 
-    <style>
+        <style>
         /* Specific overrides for Cutoffs */
         .page-header {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            backdrop-filter: blur(12px);
+            padding: 1.25rem 1rem;
             margin-bottom: 0;
+            text-align: center;
         }
 
         .page-header h1 {
-            font-size: 1.5rem;
+            font-size: clamp(1.4rem, 5vw, 2.1rem);
             margin-bottom: 8px;
-            color: var(--text-main);
+            color: var(--text-1);
         }
 
         .page-header p {
             font-size: 0.95rem;
-            color: var(--text-muted);
+            color: var(--text-3);
         }
 
         .trust-badge {
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--text-3);
             font-weight: 600;
             margin-top: 8px;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            background: white;
-            padding: 4px 8px;
+            background: rgba(30,41,59,.6);
+            padding: 4px 10px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
         }
@@ -67,18 +65,18 @@
         .seo-bridge {
             margin-top: 15px;
             padding: 12px 15px;
-            background: rgba(239, 246, 255, 0.8);
+            background: rgba(37,99,235,.1);
             border-radius: var(--radius-sm);
-            border: 1px dashed #bfdbfe;
+            border: 1px dashed rgba(37,99,235,.25);
             font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            backdrop-filter: blur(4px);
+            color: var(--text-3);
         }
 
         .seo-bridge a {
-            color: #1e40af;
+            color: var(--blue-200);
             font-weight: 700;
             text-decoration: none;
         }
@@ -86,55 +84,61 @@
         .search-bar {
             padding: 15px 20px;
             position: sticky;
-            top: 68px;
-            /* account for header height */
-            background: rgba(248, 250, 252, 0.85);
+            top: 66px;
+            background: rgba(2,6,23,.85);
             z-index: 90;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .search-input {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #cbd5e1;
+            border: 1.5px solid var(--border);
             border-radius: var(--radius-sm);
             font-size: 1rem;
             margin-bottom: 10px;
-            font-family: 'Inter', sans-serif;
-            background: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
+            background: rgba(15,23,42,.8);
+            color: var(--text-1);
             transition: var(--transition);
         }
-
+        .search-input::placeholder {
+            color: var(--text-3);
+        }
         .search-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.2);
         }
 
         .filter-row {
           display: flex;
-          gap: 10px;
+          gap: 8px;
           margin-bottom: 10px;
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
-          padding-bottom: 2px;
+          padding-bottom: 4px;
         }
         .filter-row::-webkit-scrollbar { display: none; }
 
         .filter-select {
           flex: 1;
-          min-width: 130px;
+          min-width: 135px;
           padding: 10px;
-          border: 1px solid #cbd5e1;
+          border: 1.5px solid var(--border);
           border-radius: var(--radius-sm);
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(15,23,42,.8);
           font-size: 0.9rem;
           font-weight: 600;
-          color: var(--text-main);
-          font-family: 'Inter', sans-serif;
+          color: var(--text-1);
+          font-family: inherit;
+        }
+        .filter-select option {
+          background: #1e293b;
+          color: var(--text-1);
         }
 
         .filter-select:focus {
@@ -146,20 +150,20 @@
             width: 100%;
             padding: 10px;
             border-radius: var(--radius-sm);
-            border: 1px solid #cbd5e1;
-            background: rgba(226, 232, 240, 0.7);
-            color: var(--text-muted);
+            border: 1.5px solid var(--border);
+            background: rgba(30,41,59,.6);
+            color: var(--text-3);
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
             transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            backdrop-filter: blur(4px);
+            font-family: inherit;
         }
 
         .btn-reset:hover {
-            background: #cbd5e1;
-            color: var(--text-main);
+            background: rgba(37,99,235,.1);
+            border-color: var(--primary);
+            color: var(--blue-200);
         }
 
         .data-list {
@@ -168,7 +172,6 @@
             margin: 0 auto;
         }
 
-        /* The data cards reuse the global .data-card, but we add specifics here */
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -178,14 +181,15 @@
 
         .college-name {
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--text-1);
             font-size: 1.05rem;
             line-height: 1.3;
         }
 
         .branch-tag {
-            background: var(--primary-light);
-            color: var(--primary);
+            background: rgba(37,99,235,.15);
+            color: var(--blue-200);
+            border: 1px solid rgba(37,99,235,.3);
             padding: 4px 8px;
             border-radius: var(--radius-sm);
             font-size: 0.7rem;
@@ -195,10 +199,11 @@
         }
 
         .best-match {
-            color: #d97706;
+            color: var(--moderate);
             font-size: 0.7rem;
             font-weight: 800;
-            background: #fef3c7;
+            background: rgba(245,158,11,.15);
+            border: 1px solid rgba(245,158,11,.3);
             padding: 3px 6px;
             border-radius: 4px;
             display: inline-block;
@@ -221,30 +226,31 @@
 
         .stat-label {
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: var(--text-3);
             text-transform: uppercase;
             font-weight: 700;
+            letter-spacing: .05em;
         }
 
         .stat-value {
             font-size: 1.15rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--text-1);
         }
 
         .seo-footer {
             padding: 25px 20px;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--text-3);
             text-align: center;
             border-top: 1px solid var(--border);
             margin-top: 10px;
             line-height: 1.6;
             max-width: 720px;
             margin: 0 auto 2rem;
-            background: rgba(255, 255, 255, 0.5);
+            background: var(--card);
             border-radius: var(--radius-lg);
-            backdrop-filter: blur(4px);
+            border: 1px solid var(--border);
         }
     </style>
 </head>
@@ -270,8 +276,8 @@
 
 
             <div class="seo-bridge">
-                <span>📖 Read the full analysis:</span>
-                <a href="kcet-cutoff-2025.html">KCET 2025 Guide →</a>
+                <span>ðŸ“– Read the full analysis:</span>
+                <a href="kcet-cutoff-2025.html">KCET 2025 Guide â†’</a>
             </div>
         </div>
     </div>
@@ -305,7 +311,7 @@
                     <option value="ST">ST</option>
                 </select>
             </div>
-            <button class="btn-reset" onclick="resetFilters()">↺ Reset Filters</button>
+            <button class="btn-reset" onclick="resetFilters()">â†º Reset Filters</button>
         </div>
     </div>
 
@@ -326,24 +332,24 @@
     <div class="bottom-nav-container">
         <nav class="bottom-nav">
             <a href="index.html" class="nav-item">
-                <span class="nav-icon">🏠</span>
+                <span class="nav-icon">ðŸ </span>
                 <span>Home</span>
             </a>
             <a href="predictor.html" class="nav-item">
-                <span class="nav-icon">🎯</span>
+                <span class="nav-icon">ðŸŽ¯</span>
                 <span>Predictor</span>
             </a>
             <a href="cutoffs.html" class="nav-item active">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon">ðŸ“Š</span>
                 <span>Cutoffs</span>
             </a>
             <a href="marks-to-rank.html" class="nav-item">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon">ðŸ“Š</span>
                 <span>Marks-to-Rank</span>
             </a>
       
     <a href="about.html" class="nav-item">
-      <span class="nav-icon">ℹ️</span>About
+      <span class="nav-icon">â„¹ï¸</span>About
     </a>
   </nav>
     </div>
@@ -914,7 +920,7 @@
             const container = document.getElementById('dataList');
 
             if (!cutoffDatabase || cutoffDatabase.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted);">⚠️ System Error: Cutoff data is currently unavailable. Please try again later.</div>`;
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted);">âš ï¸ System Error: Cutoff data is currently unavailable. Please try again later.</div>`;
                 return;
             }
 
@@ -928,14 +934,14 @@
                 container.innerHTML = `
             <div style="text-align:center; padding: 40px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(4px); border-radius: var(--radius-md); border: 1px dashed var(--border);">
                 <p style="color: var(--text-muted); font-weight: 600;">No colleges found matching your criteria.</p>
-                <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">💡 Try selecting "All Branches" or clicking Reset Filters.</p>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 5px;">ðŸ’¡ Try selecting "All Branches" or clicking Reset Filters.</p>
             </div>`;
                 return;
             }
 
             displayData.forEach((item, index) => {
                 let displayCutoff = item[categoryMap[selectedCategory]];
-                let highlight = index === 0 ? `<div class="best-match">⭐ MOST COMPETITIVE</div>` : "";
+                let highlight = index === 0 ? `<div class="best-match">â­ MOST COMPETITIVE</div>` : "";
 
                 htmlOutput += `
             <div class="data-card" style="margin-bottom: 12px;">
@@ -954,7 +960,7 @@
                     </div>
                     <div class="cutoff-stat" style="text-align: right; justify-content: center;">
                         <span style="font-size:0.65rem; color:#94a3b8; margin-bottom:4px; display:block;">Check if your rank fits here</span>
-                        <a href="predictor.html" style="background: var(--primary-light); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s;">Predict →</a>
+                        <a href="predictor.html" style="background: var(--primary-light); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.2s;">Predict â†’</a>
                     </div>
                 </div>
             </div>
